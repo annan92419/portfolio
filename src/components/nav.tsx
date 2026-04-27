@@ -13,6 +13,8 @@ const links = [
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -20,29 +22,101 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const ids = links.map((l) => l.href.slice(1));
+    const observers = ids.map((id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
+        { rootMargin: "-40% 0px -55% 0px" }
+      );
+      obs.observe(el);
+      return obs;
+    });
+    return () => observers.forEach((obs) => obs?.disconnect());
+  }, []);
+
   return (
     <nav
-      className={`fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-4 transition-all duration-300 ${
-        scrolled ? "border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-sm" : ""
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-sm"
+          : ""
       }`}
     >
-      <a
-        href="#hero"
-        className="text-sm font-semibold text-zinc-100 hover:text-green-400 transition-colors"
-      >
-        Jesse Annan
-      </a>
-      <div className="hidden items-center gap-6 sm:flex">
-        {links.map(({ href, label }) => (
-          <a
-            key={href}
-            href={href}
-            className="text-xs font-medium text-zinc-500 transition-colors hover:text-zinc-100"
-          >
-            {label}
-          </a>
-        ))}
+      <div className="flex items-center justify-between px-6 py-4">
+        <a
+          href="#hero"
+          className="text-base font-semibold tracking-tight text-zinc-100 transition-colors hover:text-green-400"
+        >
+          Jesse Annan
+        </a>
+
+        {/* Desktop links */}
+        <div className="hidden items-center gap-6 sm:flex">
+          {links.map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              className={`text-xs font-medium transition-colors ${
+                activeSection === href.slice(1)
+                  ? "text-green-400"
+                  : "text-zinc-500 hover:text-zinc-100"
+              }`}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="flex flex-col items-center justify-center gap-[5px] p-1 sm:hidden"
+          onClick={() => setMobileOpen((o) => !o)}
+          aria-label="Toggle menu"
+        >
+          <span
+            className={`h-px w-5 bg-zinc-400 transition-all duration-200 ${
+              mobileOpen ? "translate-y-[6px] rotate-45" : ""
+            }`}
+          />
+          <span
+            className={`h-px w-5 bg-zinc-400 transition-all duration-200 ${
+              mobileOpen ? "opacity-0" : ""
+            }`}
+          />
+          <span
+            className={`h-px w-5 bg-zinc-400 transition-all duration-200 ${
+              mobileOpen ? "-translate-y-[6px] -rotate-45" : ""
+            }`}
+          />
+        </button>
       </div>
+
+      {/* Mobile dropdown */}
+      {mobileOpen && (
+        <div className="border-t border-zinc-800/60 bg-zinc-950/95 px-6 py-5 backdrop-blur-sm sm:hidden">
+          <div className="flex flex-col gap-4">
+            {links.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className={`text-sm font-medium transition-colors ${
+                  activeSection === href.slice(1)
+                    ? "text-green-400"
+                    : "text-zinc-400 hover:text-zinc-100"
+                }`}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

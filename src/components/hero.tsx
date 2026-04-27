@@ -1,14 +1,36 @@
 "use client";
 
 import { AnimatedGradientText } from "@/components/ui/animatedGradientText";
+import { AnimatedNumber } from "@/components/ui/animatedNumber";
 import { BlurFade } from "@/components/ui/blurFade";
+
+const stats = [
+  { value: 300, suffix: "+", label: "Students Mentored" },
+  { value: 3, suffix: "", label: "Years Teaching" },
+  { value: 2, suffix: "", label: "Active Research Projects" },
+];
 
 export function Hero() {
   return (
     <section
       id="hero"
-      className="flex min-h-screen flex-col items-center justify-center px-6 text-center"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
     >
+      {/* Ambient green glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[640px] w-[640px] rounded-full bg-green-500/5 blur-[120px]"
+      />
+      {/* Dot grid texture */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.018]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      />
+
       <BlurFade delay={0} duration={0.6}>
         <p className="mb-4 text-sm font-medium tracking-widest text-green-500 uppercase">
           PhD Student · Computer Science · Georgia State University
@@ -53,8 +75,22 @@ export function Hero() {
         </div>
       </BlurFade>
 
+      {/* Stat counters */}
       <BlurFade delay={0.5} duration={0.6}>
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-600">
+        <div className="mt-16 flex flex-wrap items-center justify-center gap-10 border-t border-zinc-800/60 pt-10">
+          {stats.map(({ value, suffix, label }) => (
+            <div key={label} className="text-center">
+              <div className="text-3xl font-bold tabular-nums text-zinc-100">
+                <AnimatedNumber value={value} suffix={suffix} />
+              </div>
+              <div className="mt-1 text-xs text-zinc-500">{label}</div>
+            </div>
+          ))}
+        </div>
+      </BlurFade>
+
+      <BlurFade delay={0.62} duration={0.6}>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500">
           <span>Medical Imaging · Human Motion Prediction · NLP</span>
           <span>·</span>
           <span>Python · PyTorch · Deep Learning · Statistical Modeling</span>

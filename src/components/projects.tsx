@@ -61,8 +61,10 @@ const projects = [
 
 export function Projects() {
   return (
+
     <section id="projects" className="px-6 py-24">
       <div className="mx-auto max-w-5xl">
+        <hr className="section-rule" />
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Projects</h2>
           <p className="mb-12 text-zinc-500">

@@ -181,6 +181,7 @@ export function Research() {
   return (
     <section id="research" className="px-6 py-24">
       <div className="mx-auto max-w-5xl">
+        <hr className="section-rule" />
         <BlurFade>
           <div className="mb-3 flex items-center gap-3">
             <h2 className="text-3xl font-bold text-zinc-50">Research</h2>
@@ -202,11 +203,19 @@ export function Research() {
                 gradientOpacity={0.09}
               >
                 <div className="flex-1">
-                  <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-medium text-green-400">
-                      {paper.area} · PhD Research
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs font-medium text-green-400">
+                        {paper.area} · PhD Research
+                      </span>
+                      <StatusBadge status={paper.status} />
+                    </div>
+                    <span
+                      aria-hidden
+                      className="select-none font-mono text-[10px] tracking-widest text-zinc-800"
+                    >
+                      {String(i + 1).padStart(2, "0")}
                     </span>
-                    <StatusBadge status={paper.status} />
                   </div>
 
                   <h3 className="mb-3 text-xl font-semibold leading-snug text-zinc-50">
@@ -234,7 +243,7 @@ export function Research() {
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-2 rounded-lg bg-zinc-950/60 p-3">
+                <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 border-l-2 border-green-500/30 pl-4">
                   {paper.metrics.map(({ label, value }) => (
                     <div key={label}>
                       <p className="text-xs text-zinc-600">{label}</p>

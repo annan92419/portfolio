@@ -54,6 +54,7 @@ export function Awards() {
   return (
     <section id="awards" className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
+        <hr className="section-rule" />
         <BlurFade>
           <h2 className="mb-12 text-3xl font-bold text-zinc-50">
             Awards &amp; Skills

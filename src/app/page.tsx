@@ -6,10 +6,12 @@ import { Hero } from "@/components/hero";
 import { Nav } from "@/components/nav";
 import { Projects } from "@/components/projects";
 import { Research } from "@/components/research";
+import { ScrollProgress } from "@/components/ui/scrollProgress";
 
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
       <Nav />
       <main>
         <Hero />

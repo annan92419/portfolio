@@ -1,6 +1,7 @@
 "use client";
 
 import { BlurFade } from "@/components/ui/blurFade";
+import { motion } from "framer-motion";
 
 const roles = [
   {
@@ -39,6 +40,7 @@ export function Experience() {
   return (
     <section id="experience" className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
+        <hr className="section-rule" />
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Experience</h2>
           <p className="mb-12 text-zinc-500">
@@ -46,32 +48,48 @@ export function Experience() {
           </p>
         </BlurFade>
 
-        <div className="relative border-l border-zinc-800 pl-8 space-y-10">
-          {roles.map((role, i) => (
-            <BlurFade key={role.course} delay={i * 0.1}>
-              <div className="relative">
-                <span className="absolute -left-[2.35rem] top-1.5 h-3 w-3 rounded-full border-2 border-green-500 bg-zinc-950" />
-                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-semibold text-zinc-100">{role.title}</p>
-                    <p className="text-sm text-green-400">{role.course}</p>
-                    <p className="text-xs text-zinc-600">{role.org}</p>
+        <div className="relative pl-8">
+          {/* Animated timeline line */}
+          <motion.div
+            aria-hidden
+            className="absolute left-0 top-0 w-px bg-zinc-800"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom, transparent, black 4%, black 92%, transparent)",
+            }}
+            initial={{ scaleY: 0, originY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
+            viewport={{ once: true }}
+          />
+
+          <div className="space-y-10">
+            {roles.map((role, i) => (
+              <BlurFade key={role.course} delay={i * 0.1}>
+                <div className="relative">
+                  <span className="absolute -left-[2.35rem] top-1.5 h-3 w-3 rounded-full border-2 border-green-500 bg-zinc-950" />
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="font-semibold text-zinc-100">{role.title}</p>
+                      <p className="text-sm text-green-400">{role.course}</p>
+                      <p className="text-xs text-zinc-600">{role.org}</p>
+                    </div>
+                    <span className="mt-1 shrink-0 text-xs text-zinc-600 sm:mt-0">
+                      {role.period}
+                    </span>
                   </div>
-                  <span className="mt-1 shrink-0 text-xs text-zinc-600 sm:mt-0">
-                    {role.period}
-                  </span>
+                  <ul className="mt-3 space-y-1.5">
+                    {role.bullets.map((b) => (
+                      <li key={b} className="flex gap-2 text-sm text-zinc-400">
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-700" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="mt-3 space-y-1.5">
-                  {role.bullets.map((b) => (
-                    <li key={b} className="flex gap-2 text-sm text-zinc-400">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-700" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </BlurFade>
-          ))}
+              </BlurFade>
+            ))}
+          </div>
         </div>
       </div>
     </section>

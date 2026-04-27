@@ -44,6 +44,7 @@ export function Contact() {
   return (
     <section id="contact" className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
+        <hr className="section-rule" />
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Contact</h2>
           <p className="mb-12 text-zinc-500">

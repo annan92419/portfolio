@@ -6,6 +6,7 @@ export function About() {
   return (
     <section id="about" className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
+        <hr className="section-rule" />
         <BlurFade>
           <h2 className="mb-10 text-3xl font-bold text-zinc-50">About</h2>
         </BlurFade>
