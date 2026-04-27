@@ -47,7 +47,8 @@ export function Contact() {
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Contact</h2>
           <p className="mb-12 text-zinc-500">
-            Open to research collaborations, internships, and full-time roles.
+            Open to research collaborations, internships, and full-time ML/AI
+            roles.
           </p>
         </BlurFade>
 
@@ -63,7 +64,7 @@ export function Contact() {
                 }
                 className="group flex items-center gap-3 text-zinc-400 transition-colors hover:text-zinc-100"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 transition-colors group-hover:border-blue-500/50 group-hover:bg-zinc-800">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 transition-colors group-hover:border-green-500/50 group-hover:bg-zinc-800">
                   <Icon size={18} />
                 </span>
                 <div>

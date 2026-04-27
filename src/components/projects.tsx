@@ -21,6 +21,7 @@ const projects = [
     stack: ["PostgreSQL", "JavaScript", "HTML", "CSS", "Supabase"],
     github: "https://github.com/annan92419",
     link: null,
+    date: "Nov 2024",
   },
   {
     name: "Brain Tumor Detection",
@@ -30,15 +31,27 @@ const projects = [
     stack: ["Python", "PyTorch", "RetinaNet"],
     github: "https://github.com/annan92419",
     link: null,
+    date: "Jul 2024",
   },
   {
     name: "Student Performance Analysis",
     subtitle: "Statistical Modeling with SAS",
     description:
-      "Analyzed academic performance disparities between two schools, identifying key drivers of absenteeism through demographic data. Built a random-effect model attaining 85% accuracy.",
+      "Analyzed academic performance disparities between two schools, identifying key drivers of absenteeism. Built a random-effect model attaining 85% accuracy predicting student test scores.",
     stack: ["SAS", "Statistical Modeling", "Data Analysis"],
     github: "https://github.com/annan92419",
     link: null,
+    date: "May 2024",
+  },
+  {
+    name: "US Airline Sentiment Analysis",
+    subtitle: "NLP with Logistic Regression",
+    description:
+      "Developed a sentiment analysis system for airline customer feedback achieving 78.9% test accuracy and 84% precision on negative sentiment across 14,640 reviews. Expanded feature dimensionality from 8.5K to 61K via text preprocessing.",
+    stack: ["Python", "Scikit-Learn", "NLP", "Logistic Regression"],
+    github: "https://github.com/annan92419",
+    link: null,
+    date: "Jul 2023",
   },
 ];
 
@@ -49,19 +62,28 @@ export function Projects() {
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Projects</h2>
           <p className="mb-12 text-zinc-500">
-            A selection of work spanning ML research and full-stack engineering.
+            Spanning medical imaging, NLP, statistical modeling, and full-stack
+            engineering.
           </p>
         </BlurFade>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
           {projects.map((project, i) => (
-            <BlurFade key={project.name} delay={i * 0.1}>
-              <MagicCard className="flex h-full flex-col p-6">
+            <BlurFade key={project.name} delay={i * 0.08}>
+              <MagicCard
+                className="flex h-full flex-col p-6"
+                gradientColor="#22c55e"
+              >
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-zinc-50">
-                    {project.name}
-                  </h3>
-                  <p className="mb-3 text-xs font-medium text-blue-500">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-lg font-semibold text-zinc-50">
+                      {project.name}
+                    </h3>
+                    <span className="shrink-0 text-xs text-zinc-600">
+                      {project.date}
+                    </span>
+                  </div>
+                  <p className="mb-3 text-xs font-medium text-green-400">
                     {project.subtitle}
                   </p>
                   <p className="text-sm leading-relaxed text-zinc-400">

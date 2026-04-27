@@ -19,61 +19,51 @@ export function About() {
               machine learning and real-world applications — from deep learning
               for medical imaging to NLP and statistical modeling. I&apos;m
               currently a Teaching Assistant for Theory Foundations of CS,
-              mentoring students through some of the field&apos;s most
-              foundational ideas.
+              working through ideas in computability and complexity with a new
+              cohort of students.
             </p>
           </BlurFade>
 
           <BlurFade delay={0.1}>
             <p>
               Over the past few years I&apos;ve mentored more than 300 students
-              across statistics, data science, and theory courses. That
-              experience has shaped how I approach engineering: I care about
-              clarity as much as correctness. My projects tend to start with a
-              real problem — whether it&apos;s helping clinicians detect tumors
-              faster or giving travelers frictionless translation — and build
-              outward from there.
+              across statistics, data science, and CS theory courses. One of the
+              things I&apos;m most proud of: during my Foundations of Data
+              Science TA role, average homework scores climbed from 88.9% to
+              96.7% across the semester. I care about clarity as much as
+              correctness — whether that&apos;s in a model or an explanation.
             </p>
           </BlurFade>
 
           <BlurFade delay={0.15}>
             <p>
-              I&apos;m actively looking for research collaborations, summer
-              internships, and industry roles in machine learning engineering or
-              applied AI research. I thrive in environments that value
-              intellectual rigor, iterative experimentation, and the kind of
-              honest feedback that makes work better. If that sounds like your
-              team, let&apos;s talk.
+              My projects tend to start with a real problem and build outward.
+              LingoScape came from wanting to make translation genuinely
+              accessible across languages; the tumor detection work came from
+              wanting to see if strong object detectors could help clinicians
+              triage MRI scans faster. I&apos;m actively looking for research
+              collaborations, summer internships, and industry roles in machine
+              learning engineering or applied AI research where rigorous thinking
+              and practical impact go hand in hand.
             </p>
           </BlurFade>
         </div>
 
         <BlurFade delay={0.2}>
-          <div className="mt-10 flex flex-wrap gap-6 border-t border-zinc-800 pt-8 text-sm">
-            <div>
-              <p className="text-xs uppercase tracking-widest text-zinc-600">
-                Program
-              </p>
-              <p className="mt-1 text-zinc-300">PhD · Computer Science</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-widest text-zinc-600">
-                School
-              </p>
-              <p className="mt-1 text-zinc-300">Georgia State University</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-widest text-zinc-600">
-                Expected
-              </p>
-              <p className="mt-1 text-zinc-300">May 2030</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-widest text-zinc-600">
-                GPA
-              </p>
-              <p className="mt-1 text-zinc-300">3.77</p>
-            </div>
+          <div className="mt-10 grid grid-cols-2 gap-6 border-t border-zinc-800 pt-8 text-sm sm:grid-cols-4">
+            {[
+              { label: "Program", value: "PhD · Computer Science" },
+              { label: "School", value: "Georgia State University" },
+              { label: "Expected", value: "May 2030" },
+              { label: "GPA", value: "3.77 (MS)" },
+            ].map(({ label, value }) => (
+              <div key={label}>
+                <p className="text-xs uppercase tracking-widest text-zinc-600">
+                  {label}
+                </p>
+                <p className="mt-1 text-zinc-300">{value}</p>
+              </div>
+            ))}
           </div>
         </BlurFade>
       </div>
