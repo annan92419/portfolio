@@ -16,13 +16,11 @@ export function About() {
               I&apos;m a Computer Science PhD student at Georgia State
               University, where I also hold an MS in Mathematics &amp; Computer
               Science (GPA 3.77, Scientific Computing track). My current
-              research sits at the intersection of deep generative models and
-              real-world perception tasks — specifically medical image synthesis
-              and multi-agent trajectory prediction. Both projects involve novel
-              architectures: a three-phase conditional VAE with vision
-              transformer encoders for healthy brain tissue synthesis, and a
-              dual-stream attention model with custom positional encodings for
-              probabilistic trajectory forecasting.
+              research focuses on two problems: synthesizing healthy brain
+              tissue from tumor-affected MRI scans, and predicting plausible
+              future trajectories for agents in crowded scenes. Both sit at the
+              intersection of deep learning and real-world perception, and both
+              are works in progress toward publication.
             </p>
           </BlurFade>
 

@@ -13,16 +13,14 @@ function GitHubIcon({ size = 14 }: { size?: number }) {
 
 const papers = [
   {
-    title: "Brain Tumor Inpainting via Conditional VAE",
+    title: "Brain Tumor Inpainting",
     area: "Medical Imaging · PhD Research",
     description:
-      "A three-phase deep learning architecture for reconstructing healthy brain tissue from tumor-affected MRI scans. Given only a corrupted scan, the model synthesizes what the brain should look like without the tumor — enabling non-invasive tumor assessment and surgical planning.",
-    architecture: [
-      "Shared ViT encoder with patch embeddings (T1/T1ce/T2/FLAIR)",
-      "Dual-latent conditional VAE with PriorViT + PriorMLP",
-      "Cross-attention fusion of Sobel edge features",
-      "U-Net decoder with Adaptive Group Norm",
-      "Three-phase curriculum: autoencoder → single-latent → edge-aware",
+      "Deep learning system for synthesizing healthy brain tissue from tumor-affected MRI scans. Given only a corrupted scan, the model infers what the underlying anatomy should look like — supporting non-invasive assessment and surgical planning without requiring paired healthy images.",
+    details: [
+      "Multi-modal MRI input (T1, T1ce, T2, FLAIR modalities)",
+      "Trained and evaluated on BraTS 2023 Adult Glioma dataset",
+      "Evaluated using masked PSNR — the BraTS 2023 winner protocol",
     ],
     metrics: [
       { label: "Masked PSNR", value: "23.41 dB" },
@@ -30,29 +28,27 @@ const papers = [
       { label: "LPIPS", value: "0.08" },
       { label: "Dataset", value: "BraTS 2023" },
     ],
-    stack: ["PyTorch", "Vision Transformers", "Conditional VAE", "U-Net", "nibabel"],
+    stack: ["PyTorch", "Medical Imaging", "Deep Learning", "Python"],
     github: "https://github.com/annan92419/brain-tumor-inpainting",
     repoNote: "Private Research Repository",
   },
   {
-    title: "Dual-Stream Trajectory Prediction",
+    title: "Multi-Agent Trajectory Prediction",
     area: "Human Motion · PhD Research",
     description:
-      "A novel dual-stream attention architecture for multi-agent trajectory prediction in crowded scenes, predicting K plausible future paths from observed motion history. Introduces three-part positional encoding designed to address limitations of standard sinusoidal PE on short trajectory sequences.",
-    architecture: [
-      "Dual-stream encoder: even/odd temporal subsampling branches",
-      "tAPE: frequency-scaled sinusoidal PE for short sequences",
-      "AgentIdentityPE: learnable target vs. neighbor embeddings",
-      "MPDPE: closed-form constant-velocity proximity encoding",
-      "CVAE decoder with β-annealing for stable KL training",
+      "Deep learning model for predicting multiple plausible future trajectories for agents in crowded scenes, conditioned on observed motion history and neighboring agent behavior. Evaluated on standard autonomous driving and pedestrian simulation benchmarks.",
+    details: [
+      "Benchmarked on ETH / UCY pedestrian prediction datasets",
+      "Probabilistic output — K diverse future trajectories per agent",
+      "Supports up to 20 neighboring agents per scene",
     ],
     metrics: [
       { label: "Metric", value: "minADE / minFDE" },
       { label: "Samples", value: "K = 20" },
       { label: "Benchmark", value: "ETH / UCY" },
-      { label: "Input", value: "6D state (pos, vel, acc)" },
+      { label: "Horizon", value: "8 obs → 12 pred" },
     ],
-    stack: ["PyTorch", "Transformers", "CVAE", "Multi-agent Attention"],
+    stack: ["PyTorch", "Trajectory Prediction", "Deep Learning", "Python"],
     github: "https://github.com/annan92419/dual-stream-traj",
     repoNote: "Private Research Repository",
   },
@@ -95,10 +91,10 @@ export function Research() {
 
                   <div className="mt-5">
                     <p className="mb-2 text-xs font-medium uppercase tracking-widest text-zinc-600">
-                      Architecture
+                      Details
                     </p>
                     <ul className="space-y-1">
-                      {paper.architecture.map((item) => (
+                      {paper.details.map((item) => (
                         <li key={item} className="flex gap-2 text-xs text-zinc-500">
                           <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-green-500/50" />
                           {item}

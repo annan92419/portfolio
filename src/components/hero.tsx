@@ -55,9 +55,9 @@ export function Hero() {
 
       <BlurFade delay={0.5} duration={0.6}>
         <div className="mt-16 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-600">
-          <span>Medical Imaging · Conditional VAEs · Vision Transformers</span>
+          <span>Medical Imaging · Human Motion Prediction · NLP</span>
           <span>·</span>
-          <span>Trajectory Prediction · Multi-Agent Attention · NLP</span>
+          <span>Python · PyTorch · Deep Learning · Statistical Modeling</span>
         </div>
       </BlurFade>
     </section>
