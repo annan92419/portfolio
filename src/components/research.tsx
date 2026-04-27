@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { BlurFade } from "@/components/ui/blurFade";
 import { MagicCard } from "@/components/ui/magicCard";
 
@@ -11,10 +12,129 @@ function GitHubIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-const papers = [
+// ─── Status system ────────────────────────────────────────────────────────────
+
+type ResearchStatus =
+  | { type: "in_progress" }
+  | { type: "preprint"; url?: string }
+  | { type: "submitted"; venue: string; year: number }
+  | { type: "under_review"; venue: string; year: number }
+  | { type: "accepted"; venue: string; year: number }
+  | { type: "published"; venue: string; year: number; url?: string };
+
+const STATUS_CONFIG: Record<
+  ResearchStatus["type"],
+  { label: string; color: string; dot: string }
+> = {
+  in_progress: {
+    label: "In Progress",
+    color: "text-zinc-400 bg-zinc-800/80 ring-zinc-700/50",
+    dot: "bg-zinc-400",
+  },
+  preprint: {
+    label: "Preprint",
+    color: "text-amber-300 bg-amber-500/10 ring-amber-500/20",
+    dot: "bg-amber-400",
+  },
+  submitted: {
+    label: "Submitted",
+    color: "text-sky-300 bg-sky-500/10 ring-sky-500/20",
+    dot: "bg-sky-400",
+  },
+  under_review: {
+    label: "Under Review",
+    color: "text-violet-300 bg-violet-500/10 ring-violet-500/20",
+    dot: "bg-violet-400",
+  },
+  accepted: {
+    label: "Accepted",
+    color: "text-green-300 bg-green-500/10 ring-green-500/20",
+    dot: "bg-green-400",
+  },
+  published: {
+    label: "Published",
+    color: "text-emerald-200 bg-emerald-500/15 ring-emerald-400/30",
+    dot: "bg-emerald-300",
+  },
+};
+
+function StatusBadge({ status }: { status: ResearchStatus }) {
+  const config = STATUS_CONFIG[status.type];
+
+  const venue =
+    "venue" in status ? `${status.venue} ${status.year}` : null;
+
+  const url =
+    status.type === "published" || status.type === "preprint"
+      ? status.url
+      : null;
+
+  const inner = (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1",
+        config.color,
+        url && "cursor-pointer transition-opacity hover:opacity-80"
+      )}
+    >
+      {/* Pulsing dot for in_progress, static for all others */}
+      {status.type === "in_progress" ? (
+        <span className="relative flex h-1.5 w-1.5 shrink-0">
+          <span
+            className={cn(
+              "absolute inline-flex h-full w-full animate-ping rounded-full opacity-75",
+              config.dot
+            )}
+          />
+          <span
+            className={cn(
+              "relative inline-flex h-1.5 w-1.5 rounded-full",
+              config.dot
+            )}
+          />
+        </span>
+      ) : (
+        <span
+          className={cn("h-1.5 w-1.5 shrink-0 rounded-full", config.dot)}
+        />
+      )}
+      {config.label}
+      {venue && (
+        <>
+          <span className="opacity-40">·</span>
+          <span className="font-normal opacity-80">{venue}</span>
+        </>
+      )}
+    </span>
+  );
+
+  if (url) {
+    return (
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        {inner}
+      </a>
+    );
+  }
+  return inner;
+}
+
+// ─── Paper data ───────────────────────────────────────────────────────────────
+
+const papers: Array<{
+  title: string;
+  area: string;
+  status: ResearchStatus;
+  description: string;
+  details: string[];
+  metrics: Array<{ label: string; value: string }>;
+  stack: string[];
+  github: string;
+  repoNote: string;
+}> = [
   {
     title: "Brain Tumor Inpainting",
-    area: "Medical Imaging · PhD Research",
+    area: "Medical Imaging",
+    status: { type: "in_progress" },
     description:
       "Deep learning system for synthesizing healthy brain tissue from tumor-affected MRI scans. Given only a corrupted scan, the model infers what the underlying anatomy should look like — supporting non-invasive assessment and surgical planning without requiring paired healthy images.",
     details: [
@@ -34,7 +154,8 @@ const papers = [
   },
   {
     title: "Multi-Agent Trajectory Prediction",
-    area: "Human Motion · PhD Research",
+    area: "Human Motion",
+    status: { type: "in_progress" },
     description:
       "Deep learning model for predicting multiple plausible future trajectories for agents in crowded scenes, conditioned on observed motion history and neighboring agent behavior. Evaluated on standard autonomous driving and pedestrian simulation benchmarks.",
     details: [
@@ -53,6 +174,8 @@ const papers = [
     repoNote: "Private Research Repository",
   },
 ];
+
+// ─── Section ──────────────────────────────────────────────────────────────────
 
 export function Research() {
   return (
@@ -79,9 +202,13 @@ export function Research() {
                 gradientOpacity={0.09}
               >
                 <div className="flex-1">
-                  <p className="mb-2 text-xs font-medium text-green-400">
-                    {paper.area}
-                  </p>
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-medium text-green-400">
+                      {paper.area} · PhD Research
+                    </span>
+                    <StatusBadge status={paper.status} />
+                  </div>
+
                   <h3 className="mb-3 text-xl font-semibold leading-snug text-zinc-50">
                     {paper.title}
                   </h3>
@@ -95,7 +222,10 @@ export function Research() {
                     </p>
                     <ul className="space-y-1">
                       {paper.details.map((item) => (
-                        <li key={item} className="flex gap-2 text-xs text-zinc-500">
+                        <li
+                          key={item}
+                          className="flex gap-2 text-xs text-zinc-500"
+                        >
                           <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-green-500/50" />
                           {item}
                         </li>
@@ -108,7 +238,9 @@ export function Research() {
                   {paper.metrics.map(({ label, value }) => (
                     <div key={label}>
                       <p className="text-xs text-zinc-600">{label}</p>
-                      <p className="text-sm font-semibold text-zinc-200">{value}</p>
+                      <p className="text-sm font-semibold text-zinc-200">
+                        {value}
+                      </p>
                     </div>
                   ))}
                 </div>
