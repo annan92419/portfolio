@@ -17,41 +17,45 @@ const projects = [
     name: "LingoScape",
     subtitle: "Multi-Modal Translation Platform",
     description:
-      "Architected a multilingual platform supporting 15 languages with real-time translation and extensible video conferencing infrastructure. Placed 2nd among 28 teams in the GSU CS demo competition.",
-    stack: ["PostgreSQL", "JavaScript", "HTML", "CSS", "Supabase"],
-    github: "https://github.com/annan92419",
+      "Full-stack multilingual platform supporting 15 languages with real-time speech-to-text, text translation, and text-to-speech. Built with a 5-person team — placed 2nd among 28 teams at the GSU CS demo competition.",
+    highlight: "2nd / 28 teams · <500ms latency",
+    stack: ["Node.js", "Express", "Supabase", "Web Speech API", "PostgreSQL"],
+    github: "https://github.com/annan92419/CSC-SWE-Lingo_Master_Coders",
     link: null,
     date: "Nov 2024",
   },
   {
     name: "Brain Tumor Detection",
-    subtitle: "Deep Learning with RetinaNet",
+    subtitle: "Object Detection · RetinaNet",
     description:
-      "Refined a deep learning tumor detection system achieving 94% mAP (IoU 0.5) on brain MRI scans, with robust performance across diverse tumor sizes in a 123-image clinical test set.",
-    stack: ["Python", "PyTorch", "RetinaNet"],
-    github: "https://github.com/annan92419",
+      "Trained RetinaNet (ResNet-50 + FPN) on 1,229 brain MRI scans using Detectron2. Achieved state-of-the-art detection accuracy across multiple IoU thresholds on Google Colab Pro with A100 GPUs.",
+    highlight: "94% mAP @ IoU 0.5 · 91% @ IoU 0.75",
+    stack: ["Python", "PyTorch", "Detectron2", "RetinaNet", "Google Colab"],
+    github: "https://github.com/annan92419/GaState",
     link: null,
     date: "Jul 2024",
   },
   {
-    name: "Student Performance Analysis",
-    subtitle: "Statistical Modeling with SAS",
-    description:
-      "Analyzed academic performance disparities between two schools, identifying key drivers of absenteeism. Built a random-effect model attaining 85% accuracy predicting student test scores.",
-    stack: ["SAS", "Statistical Modeling", "Data Analysis"],
-    github: "https://github.com/annan92419",
-    link: null,
-    date: "May 2024",
-  },
-  {
     name: "US Airline Sentiment Analysis",
-    subtitle: "NLP with Logistic Regression",
+    subtitle: "NLP · Twitter Feedback",
     description:
-      "Developed a sentiment analysis system for airline customer feedback achieving 78.9% test accuracy and 84% precision on negative sentiment across 14,640 reviews. Expanded feature dimensionality from 8.5K to 61K via text preprocessing.",
-    stack: ["Python", "Scikit-Learn", "NLP", "Logistic Regression"],
-    github: "https://github.com/annan92419",
+      "Sentiment classifier for airline customer feedback using logistic regression on 14,640 tweets. Expanded feature dimensionality from 8.5K to 61K via TF-IDF and n-gram preprocessing.",
+    highlight: "78.9% accuracy · 84% precision on negatives",
+    stack: ["Python", "Scikit-Learn", "TF-IDF", "Logistic Regression"],
+    github: "https://github.com/annan92419/GaState",
     link: null,
     date: "Jul 2023",
+  },
+  {
+    name: "Student Hostel Price Prediction",
+    subtitle: "Undergraduate Research · KNUST",
+    description:
+      "First-ever ML study of the KNUST student hostel market. Manually collected 500 responses from 70 hostels and trained multiple regression models to predict room prices from location, amenities, and proximity features.",
+    highlight: "R² > 0.75 · 77%+ accuracy across all models",
+    stack: ["Python", "Ridge Regression", "Neural Network", "Survey Data"],
+    github: "https://github.com/annan92419/undergrad_project",
+    link: null,
+    date: "2022",
   },
 ];
 
@@ -62,12 +66,12 @@ export function Projects() {
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Projects</h2>
           <p className="mb-12 text-zinc-500">
-            Spanning medical imaging, NLP, statistical modeling, and full-stack
-            engineering.
+            Applied engineering and data science across NLP, computer vision,
+            and systems.
           </p>
         </BlurFade>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {projects.map((project, i) => (
             <BlurFade key={project.name} delay={i * 0.08}>
               <MagicCard
@@ -83,15 +87,20 @@ export function Projects() {
                       {project.date}
                     </span>
                   </div>
-                  <p className="mb-3 text-xs font-medium text-green-400">
+                  <p className="mb-2 text-xs font-medium text-green-400">
                     {project.subtitle}
                   </p>
                   <p className="text-sm leading-relaxed text-zinc-400">
                     {project.description}
                   </p>
+                  {project.highlight && (
+                    <p className="mt-3 text-xs font-medium text-zinc-300">
+                      {project.highlight}
+                    </p>
+                  )}
                 </div>
 
-                <div className="mt-5 flex flex-wrap gap-1.5">
+                <div className="mt-4 flex flex-wrap gap-1.5">
                   {project.stack.map((tag) => (
                     <span
                       key={tag}
@@ -102,14 +111,14 @@ export function Projects() {
                   ))}
                 </div>
 
-                <div className="mt-5 flex items-center gap-4">
+                <div className="mt-4 flex items-center gap-4">
                   <a
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-200"
                   >
-                    <GitHubIcon size={14} />
+                    <GitHubIcon size={13} />
                     GitHub
                   </a>
                   {project.link ? (
@@ -119,7 +128,7 @@ export function Projects() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-200"
                     >
-                      <ExternalLink size={14} />
+                      <ExternalLink size={13} />
                       Live
                     </a>
                   ) : (

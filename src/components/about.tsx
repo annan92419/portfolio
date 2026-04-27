@@ -15,36 +15,39 @@ export function About() {
             <p>
               I&apos;m a Computer Science PhD student at Georgia State
               University, where I also hold an MS in Mathematics &amp; Computer
-              Science (GPA 3.77). My research sits at the intersection of
-              machine learning and real-world applications — from deep learning
-              for medical imaging to NLP and statistical modeling. I&apos;m
-              currently a Teaching Assistant for Theory Foundations of CS,
-              working through ideas in computability and complexity with a new
-              cohort of students.
+              Science (GPA 3.77, Scientific Computing track). My current
+              research sits at the intersection of deep generative models and
+              real-world perception tasks — specifically medical image synthesis
+              and multi-agent trajectory prediction. Both projects involve novel
+              architectures: a three-phase conditional VAE with vision
+              transformer encoders for healthy brain tissue synthesis, and a
+              dual-stream attention model with custom positional encodings for
+              probabilistic trajectory forecasting.
             </p>
           </BlurFade>
 
           <BlurFade delay={0.1}>
             <p>
-              Over the past few years I&apos;ve mentored more than 300 students
-              across statistics, data science, and CS theory courses. One of the
-              things I&apos;m most proud of: during my Foundations of Data
-              Science TA role, average homework scores climbed from 88.9% to
-              96.7% across the semester. I care about clarity as much as
-              correctness — whether that&apos;s in a model or an explanation.
+              Before the PhD, I developed a strong foundation in statistical
+              modeling, NLP, and computer vision through graduate coursework and
+              independent projects — from RetinaNet-based tumor detection
+              (94% mAP) to logistic regression sentiment analysis on 14K+ tweets
+              to the first ML study of student hostel pricing at KNUST, Ghana.
+              That last project, which I led as an undergrad, taught me that the
+              hardest part of applied ML is often the data — we manually
+              collected 500 survey responses across 70 hostels.
             </p>
           </BlurFade>
 
           <BlurFade delay={0.15}>
             <p>
-              My projects tend to start with a real problem and build outward.
-              LingoScape came from wanting to make translation genuinely
-              accessible across languages; the tumor detection work came from
-              wanting to see if strong object detectors could help clinicians
-              triage MRI scans faster. I&apos;m actively looking for research
-              collaborations, summer internships, and industry roles in machine
-              learning engineering or applied AI research where rigorous thinking
-              and practical impact go hand in hand.
+              I&apos;ve spent three years teaching and mentoring — over 300
+              students across statistics, data science, and CS theory — and that
+              work has shaped how I think about research communication. I write
+              code and papers with the same goal: make the idea clear enough
+              that someone else can build on it. I&apos;m looking for research
+              collaborations, internships, and roles in ML engineering or
+              applied AI where that combination of rigor and clarity is valued.
             </p>
           </BlurFade>
         </div>
@@ -53,7 +56,7 @@ export function About() {
           <div className="mt-10 grid grid-cols-2 gap-6 border-t border-zinc-800 pt-8 text-sm sm:grid-cols-4">
             {[
               { label: "Program", value: "PhD · Computer Science" },
-              { label: "School", value: "Georgia State University" },
+              { label: "School", value: "Georgia State" },
               { label: "Expected", value: "May 2030" },
               { label: "GPA", value: "3.77 (MS)" },
             ].map(({ label, value }) => (
