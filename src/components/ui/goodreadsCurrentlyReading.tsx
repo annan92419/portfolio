@@ -12,8 +12,6 @@ interface BookData {
   published: number | null;
 }
 
-// Static fallback — shown when no Goodreads ID is provided or fetch fails.
-// Update goodreadsUserId prop when you have your Goodreads profile ID.
 const FALLBACK_BOOKS: BookData[] = [
   {
     title: "Thinking Better",
@@ -33,34 +31,18 @@ const FALLBACK_BOOKS: BookData[] = [
   },
 ];
 
-function parseRSSItem(item: Element): BookData {
-  const title =
-    item.querySelector("title")?.textContent?.trim() ?? "Unknown Title";
-  const author =
-    item.querySelector("author_name")?.textContent?.trim() ?? "Unknown Author";
-  const rating = item.querySelector("average_rating")?.textContent?.trim();
-  const published = item.querySelector("book_published")?.textContent?.trim();
-  const bookId = item.querySelector("book_id")?.textContent?.trim();
-  const largeImage = item
-    .querySelector("book_large_image_url")
-    ?.textContent?.trim();
-  const mediumImage = item
-    .querySelector("book_medium_image_url")
-    ?.textContent?.trim();
-  const smallImage = item
-    .querySelector("book_small_image_url")
-    ?.textContent?.trim();
-
-  return {
-    title,
-    author,
-    imageUrl: largeImage ?? mediumImage ?? smallImage ?? null,
-    bookUrl: bookId
-      ? `https://www.goodreads.com/book/show/${bookId}`
-      : null,
-    rating: rating ? parseFloat(rating) : null,
-    published: published ? parseInt(published) : null,
-  };
+async function fetchShelf(userId: string, shelf: string, max: number): Promise<BookData[]> {
+  const res = await fetch(`/api/goodreads?userId=${userId}&shelf=${shelf}&max=${max}`);
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  const data = await res.json();
+  return (data.books as Array<Record<string, string>>).map((b) => ({
+    title: b.title,
+    author: b.author,
+    imageUrl: b.imageUrl || null,
+    bookUrl: b.bookUrl || null,
+    rating: b.rating ? parseFloat(b.rating) : null,
+    published: b.published ? parseInt(b.published) : null,
+  }));
 }
 
 interface Props {
@@ -75,38 +57,10 @@ export function CurrentlyReading({ goodreadsUserId, maxBooks = 2 }: Props) {
   useEffect(() => {
     if (!goodreadsUserId) return;
 
-    const RSS_URL = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=currently-reading`;
-
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(
-          `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`
-        );
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const data = await res.json();
-        if (!data.contents) throw new Error("Empty response");
-
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data.contents, "text/xml");
-        if (xml.querySelector("parsererror")) throw new Error("Bad XML");
-
-        const items = Array.from(xml.querySelectorAll("item")).slice(
-          0,
-          maxBooks
-        );
-        if (items.length === 0) throw new Error("Empty shelf");
-
-        setBooks(items.map(parseRSSItem));
-      } catch {
-        // Keep fallback data on any error
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
+    fetchShelf(goodreadsUserId, "currently-reading", maxBooks)
+      .then((b) => { if (b.length > 0) setBooks(b); })
+      .catch(() => { /* keep fallback */ })
+      .finally(() => setLoading(false));
   }, [goodreadsUserId, maxBooks]);
 
   if (loading) {
@@ -221,34 +175,10 @@ export function AlreadyRead({ goodreadsUserId, maxBooks = 12 }: AlreadyReadProps
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const RSS_URL = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=read&sort=date_read&order=d`;
-
-    const fetchBooks = async () => {
-      try {
-        const res = await fetch(
-          `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`
-        );
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const data = await res.json();
-        if (!data.contents) throw new Error("Empty response");
-
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data.contents, "text/xml");
-        if (xml.querySelector("parsererror")) throw new Error("Bad XML");
-
-        const items = Array.from(xml.querySelectorAll("item")).slice(0, maxBooks);
-        if (items.length === 0) throw new Error("Empty shelf");
-
-        setBooks(items.map(parseRSSItem));
-      } catch {
-        // silently show nothing on error
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
+    fetchShelf(goodreadsUserId, "read", maxBooks)
+      .then(setBooks)
+      .catch(() => { /* silently show nothing */ })
+      .finally(() => setLoading(false));
   }, [goodreadsUserId, maxBooks]);
 
   if (loading) {
