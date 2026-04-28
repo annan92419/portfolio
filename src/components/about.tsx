@@ -1,6 +1,7 @@
 "use client";
 
 import { BlurFade } from "@/components/ui/blurFade";
+import { CurrentlyReading } from "@/components/ui/goodreadsCurrentlyReading";
 
 export function About() {
   return (
@@ -67,6 +68,11 @@ export function About() {
               </div>
             ))}
           </div>
+        </BlurFade>
+
+        <BlurFade delay={0.25}>
+          {/* Add your Goodreads user ID as goodreadsUserId prop to enable live sync */}
+          <CurrentlyReading />
         </BlurFade>
       </div>
     </section>
