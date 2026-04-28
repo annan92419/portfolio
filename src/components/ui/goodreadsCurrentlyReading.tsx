@@ -1,7 +1,7 @@
 "use client";
 
 import { BookOpen, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface BookData {
   title: string;
@@ -205,4 +205,163 @@ function BookCard({ book }: { book: BookData }) {
     );
   }
   return content;
+}
+
+// ─── Already Read ────────────────────────────────────────────────────────────
+
+interface AlreadyReadProps {
+  goodreadsUserId: string;
+  maxBooks?: number;
+}
+
+export function AlreadyRead({ goodreadsUserId, maxBooks = 12 }: AlreadyReadProps) {
+  const [books, setBooks] = useState<BookData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const RSS_URL = `https://www.goodreads.com/review/list_rss/${goodreadsUserId}?shelf=read&sort=date_read&order=d`;
+
+    const fetchBooks = async () => {
+      try {
+        const res = await fetch(
+          `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        if (!data.contents) throw new Error("Empty response");
+
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, "text/xml");
+        if (xml.querySelector("parsererror")) throw new Error("Bad XML");
+
+        const items = Array.from(xml.querySelectorAll("item")).slice(0, maxBooks);
+        if (items.length === 0) throw new Error("Empty shelf");
+
+        setBooks(items.map(parseRSSItem));
+      } catch {
+        // silently show nothing on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, [goodreadsUserId, maxBooks]);
+
+  if (loading) {
+    return (
+      <div className="mt-8 border-t border-zinc-800 pt-8">
+        <p className="mb-4 text-xs font-medium uppercase tracking-widest text-zinc-600">
+          Already Read
+        </p>
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-20 w-[52px] shrink-0 animate-pulse rounded-md bg-zinc-800"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (books.length === 0) return null;
+
+  return (
+    <div className="mt-8 border-t border-zinc-800 pt-8">
+      <p className="mb-4 text-xs font-medium uppercase tracking-widest text-zinc-600">
+        Already Read
+      </p>
+
+      <div className="relative flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {books.map((book, i) => (
+          <SpineCover
+            key={book.title + i}
+            book={book}
+            active={activeIdx === i}
+            onEnter={() => setActiveIdx(i)}
+            onLeave={() => setActiveIdx(null)}
+            tooltipRef={i === activeIdx ? tooltipRef : undefined}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SpineCover({
+  book,
+  active,
+  onEnter,
+  onLeave,
+  tooltipRef,
+}: {
+  book: BookData;
+  active: boolean;
+  onEnter: () => void;
+  onLeave: () => void;
+  tooltipRef?: React.RefObject<HTMLDivElement | null>;
+}) {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  const cover = (
+    <div
+      className={`relative h-20 w-[52px] shrink-0 cursor-pointer overflow-hidden rounded-md shadow-md transition-all duration-200 ${
+        active ? "scale-110 ring-1 ring-green-500/60 shadow-green-500/20 shadow-lg" : "opacity-80 hover:opacity-100"
+      }`}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+    >
+      {book.imageUrl && !imgFailed ? (
+        <img
+          src={book.imageUrl}
+          alt={`Cover of ${book.title}`}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          onError={() => setImgFailed(true)}
+        />
+      ) : (
+        <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-zinc-800 px-1">
+          <BookOpen size={14} className="text-zinc-600" />
+          <p className="text-center text-[8px] leading-tight text-zinc-600 line-clamp-3">
+            {book.title}
+          </p>
+        </div>
+      )}
+
+      {/* hover tooltip */}
+      {active && (
+        <div
+          ref={tooltipRef}
+          className="absolute bottom-full left-1/2 z-50 mb-2 w-40 -translate-x-1/2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 shadow-xl pointer-events-none"
+        >
+          <p className="text-xs font-semibold leading-snug text-zinc-100 line-clamp-2">
+            {book.title}
+          </p>
+          <p className="mt-0.5 text-[11px] text-zinc-500">by {book.author}</p>
+          {book.rating && (
+            <span className="mt-1 flex items-center gap-1 text-[11px] text-zinc-600">
+              <Star size={10} className="fill-yellow-400 text-yellow-400" />
+              {book.rating.toFixed(2)}
+            </span>
+          )}
+          {/* arrow */}
+          <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-zinc-700" />
+        </div>
+      )}
+    </div>
+  );
+
+  if (book.bookUrl) {
+    return (
+      <a href={book.bookUrl} target="_blank" rel="noopener noreferrer">
+        {cover}
+      </a>
+    );
+  }
+  return cover;
 }
