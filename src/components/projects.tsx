@@ -14,14 +14,28 @@ function GitHubIcon({ size = 14 }: { size?: number }) {
 
 const projects = [
   {
+    name: "xFPL",
+    subtitle: "Fantasy Football · Full-Stack App",
+    description:
+      "Solo-built AI-powered Fantasy Premier League management system with squad building (£100M budget), captain system, head-to-head leagues, and live gameweek simulation. AI transfer recommender scores candidates by recent form, fixture difficulty rating (FDR), and points-per-million value.",
+    highlight: "Shortlisted for Best Project · DB Systems, Fall 2025",
+    stack: ["FastAPI", "Next.js", "PostgreSQL", "Supabase", "Python"],
+    github:
+      "https://github.com/annan92419/GaState/tree/main/grad_projects/CSC%206710%20-%20Database%20Systems",
+    link: "https://youtu.be/BA7b1GwGNkQ",
+    linkLabel: "Demo",
+    date: "Dec 2025",
+  },
+  {
     name: "LingoScape",
     subtitle: "Multi-Modal Translation Platform",
     description:
-      "Full-stack multilingual platform supporting 15 languages with real-time speech-to-text, text translation, and text-to-speech. Built with a 5-person team — placed 2nd among 28 teams at the GSU CS demo competition.",
+      "Full-stack multilingual platform supporting 15 languages with real-time speech-to-text, text translation, text-to-speech, and video conferencing. Built with a 5-person team — placed 2nd among 28 teams at the GSU CS demo competition.",
     highlight: "2nd / 28 teams · <500ms latency",
     stack: ["Node.js", "Express", "Supabase", "Web Speech API", "PostgreSQL"],
     github: "https://github.com/annan92419/CSC-SWE-Lingo_Master_Coders",
     link: null,
+    linkLabel: null,
     date: "Nov 2024",
   },
   {
@@ -31,8 +45,10 @@ const projects = [
       "Trained RetinaNet (ResNet-50 + FPN) on 1,229 brain MRI scans using Detectron2. Achieved state-of-the-art detection accuracy across multiple IoU thresholds on Google Colab Pro with A100 GPUs.",
     highlight: "94% mAP @ IoU 0.5 · 91% @ IoU 0.75",
     stack: ["Python", "PyTorch", "Detectron2", "RetinaNet", "Google Colab"],
-    github: "https://github.com/annan92419/GaState",
+    github:
+      "https://github.com/annan92419/GaState/tree/main/grad_projects/MATH8820%20-%20Final%20Research_MS%20Math",
     link: null,
+    linkLabel: null,
     date: "Jul 2024",
   },
   {
@@ -42,19 +58,22 @@ const projects = [
       "Sentiment classifier for airline customer feedback using logistic regression on 14,640 tweets. Expanded feature dimensionality from 8.5K to 61K via TF-IDF and n-gram preprocessing.",
     highlight: "78.9% accuracy · 84% precision on negatives",
     stack: ["Python", "Scikit-Learn", "TF-IDF", "Logistic Regression"],
-    github: "https://github.com/annan92419/GaState",
+    github:
+      "https://github.com/annan92419/GaState/tree/main/grad_projects/CSC%206850%20-%20Machine%20Learning",
     link: null,
+    linkLabel: null,
     date: "Jul 2023",
   },
   {
     name: "Student Hostel Price Prediction",
     subtitle: "Undergraduate Research · KNUST",
     description:
-      "First-ever ML study of the KNUST student hostel market. Manually collected 500 responses from 70 hostels and trained multiple regression models to predict room prices from location, amenities, and proximity features.",
+      "First-ever ML study of the KNUST student hostel market. Manually collected 500 responses from 70 hostels and trained regression and neural network models to predict room prices from location, amenities, and proximity features.",
     highlight: "R² > 0.75 · 77%+ accuracy across all models",
-    stack: ["Python", "Ridge Regression", "Neural Network", "Survey Data"],
+    stack: ["MATLAB", "Ridge Regression", "Neural Network", "Survey Data"],
     github: "https://github.com/annan92419/undergrad_project",
     link: null,
+    linkLabel: null,
     date: "2022",
   },
 ];
@@ -131,7 +150,7 @@ export function Projects() {
                       className="flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-200"
                     >
                       <ExternalLink size={13} />
-                      Live
+                      {project.linkLabel ?? "Live"}
                     </a>
                   ) : (
                     <span className="text-xs text-zinc-700">Coming soon</span>
