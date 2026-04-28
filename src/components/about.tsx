@@ -71,8 +71,7 @@ export function About() {
         </BlurFade>
 
         <BlurFade delay={0.25}>
-          {/* Add your Goodreads user ID as goodreadsUserId prop to enable live sync */}
-          <CurrentlyReading />
+          <CurrentlyReading goodreadsUserId="173107363" />
         </BlurFade>
       </div>
     </section>
