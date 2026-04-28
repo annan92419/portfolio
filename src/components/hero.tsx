@@ -129,8 +129,8 @@ export function Hero() {
         }}
       />
 
-      {/* ── Hobbies panel (desktop only) ───────────────────────────────────── */}
-      <aside className="absolute left-6 top-24 z-10 hidden w-[200px] flex-col gap-3.5 lg:flex">
+      {/* ── Hobbies panel (md+ screens) ────────────────────────────────────── */}
+      <aside className="absolute left-6 top-24 z-10 hidden md:flex md:flex-col md:gap-3 w-52 rounded-xl border border-zinc-800/70 bg-zinc-950/60 p-4 backdrop-blur-sm">
         <p className="mb-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-zinc-600">
           Beyond the lab
         </p>
