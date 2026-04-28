@@ -18,7 +18,7 @@ const projects = [
     subtitle: "Fantasy Football · Full-Stack App",
     description:
       "Solo-built AI-powered Fantasy Premier League management system with squad building (£100M budget), captain system, head-to-head leagues, and live gameweek simulation. AI transfer recommender scores candidates by recent form, fixture difficulty rating (FDR), and points-per-million value.",
-    highlight: "Shortlisted for Best Project · DB Systems, Fall 2025",
+    highlight: "2nd Best Project · Graduate Category · DB Systems, Fall 2025",
     stack: ["FastAPI", "Next.js", "PostgreSQL", "Supabase", "Python"],
     github:
       "https://github.com/annan92419/GaState/tree/main/grad_projects/CSC%206710%20-%20Database%20Systems",
@@ -152,9 +152,7 @@ export function Projects() {
                       <ExternalLink size={13} />
                       {project.linkLabel ?? "Live"}
                     </a>
-                  ) : (
-                    <span className="text-xs text-zinc-700">Coming soon</span>
-                  )}
+                  ) : null}
                 </div>
               </MagicCard>
             </BlurFade>
