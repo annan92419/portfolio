@@ -16,7 +16,7 @@ export function About() {
             <p>
               I&apos;m a Computer Science PhD student at Georgia State
               University, where I also hold an MS in Mathematics &amp; Computer
-              Science (GPA 3.77, Scientific Computing track). My current
+              Science (GPA 3.81, Scientific Computing track). My current
               research focuses on two problems: synthesizing healthy brain
               tissue from tumor-affected MRI scans, and predicting plausible
               future trajectories for agents in crowded scenes. Both sit at the
@@ -57,7 +57,7 @@ export function About() {
               { label: "Program", value: "PhD · Computer Science" },
               { label: "School", value: "Georgia State" },
               { label: "Expected", value: "May 2030" },
-              { label: "GPA", value: "3.77 (MS)" },
+              { label: "GPA", value: "3.81 (MS)" },
             ].map(({ label, value }) => (
               <div key={label}>
                 <p className="text-xs uppercase tracking-widest text-zinc-600">
