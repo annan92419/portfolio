@@ -71,6 +71,7 @@ export function About() {
         </BlurFade>
 
         <BlurFade delay={0.25}>
+          <div id="books" />
           <CurrentlyReading goodreadsUserId="173107363" />
         </BlurFade>
 

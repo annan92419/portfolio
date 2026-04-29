@@ -1,6 +1,6 @@
 "use client";
 
-import { FlaskConical, Code2, Briefcase, Trophy, User, Mail } from "lucide-react";
+import { FlaskConical, Code2, Briefcase, Trophy, User, Mail, BookOpen } from "lucide-react";
 
 const menuItems = [
   { title: "Research",   icon: <FlaskConical size={20} />, gradientFrom: "#a955ff", gradientTo: "#ea51ff", href: "#research"   },
@@ -9,6 +9,7 @@ const menuItems = [
   { title: "Awards",     icon: <Trophy       size={20} />, gradientFrom: "#80FF72", gradientTo: "#7EE8FA", href: "#awards"     },
   { title: "About",      icon: <User         size={20} />, gradientFrom: "#ffa9c6", gradientTo: "#f434e2", href: "#about"      },
   { title: "Contact",    icon: <Mail         size={20} />, gradientFrom: "#f7971e", gradientTo: "#ffd200", href: "#contact"    },
+  { title: "Reading",    icon: <BookOpen     size={20} />, gradientFrom: "#43e97b", gradientTo: "#38f9d7", href: "#books"      },
 ];
 
 export function GradientMenu({ activeSection }: { activeSection?: string }) {

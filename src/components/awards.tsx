@@ -29,9 +29,6 @@ const skills = {
     "Git",
     "GitHub",
     "LaTeX",
-    "SAS",
-    "HTML/CSS",
-    "JavaScript",
   ],
   "Machine Learning": [
     "ML Algorithms",
