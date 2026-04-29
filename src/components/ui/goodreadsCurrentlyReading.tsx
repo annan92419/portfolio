@@ -1,6 +1,7 @@
 "use client";
 
 import { BookOpen, Star } from "lucide-react";
+import { motion, PanInfo } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 interface BookData {
@@ -55,183 +56,111 @@ async function fetchShelf(userId: string, shelf: string, max: number): Promise<B
   }));
 }
 
-interface Props {
-  goodreadsUserId?: string;
-  maxBooks?: number;
-}
+// ─── Book stack card (draggable) ──────────────────────────────────────────────
 
-export function CurrentlyReading({ goodreadsUserId, maxBooks = 2 }: Props) {
-  const [books, setBooks] = useState<BookData[]>(FALLBACK_BOOKS);
-  const [loading, setLoading] = useState(!!goodreadsUserId);
-
-  useEffect(() => {
-    if (!goodreadsUserId) return;
-    fetchShelf(goodreadsUserId, "currently-reading", maxBooks)
-      .then((b) => { if (b.length > 0) setBooks(b); })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [goodreadsUserId, maxBooks]);
-
-  const LiveDot = () => (
-    <span className="relative flex h-2 w-2">
-      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-      <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-    </span>
-  );
-
-  if (loading) {
-    return (
-      <div>
-        <p className="mb-5 flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-zinc-500">
-          <LiveDot />
-          Currently Reading
-        </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="flex animate-pulse gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-              <div className="h-36 w-24 shrink-0 rounded-xl bg-zinc-800" />
-              <div className="flex-1 space-y-3 py-2">
-                <div className="h-3 w-4/5 rounded bg-zinc-800" />
-                <div className="h-3 w-1/2 rounded bg-zinc-800" />
-                <div className="h-3 w-1/4 rounded bg-zinc-800" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+function StackCard({
+  book,
+  position,
+  total,
+  isFront,
+  onShuffle,
+}: {
+  book: BookData;
+  position: number;
+  total: number;
+  isFront: boolean;
+  onShuffle: () => void;
+}) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const rotations = ["-5deg", "0deg", "5deg", "8deg"];
+  const xPercents = ["0%", "18%", "36%", "52%"];
 
   return (
-    <div>
-      <p className="mb-5 flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-zinc-500">
-        <LiveDot />
-        Currently Reading
-      </p>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {books.map((book, i) => (
-          <SpotlightCard key={book.title} book={book} featured={i === 0} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SpotlightCard({ book, featured }: { book: BookData; featured: boolean }) {
-  const [imgFailed, setImgFailed] = useState(false);
-
-  const inner = (
-    <div className={`group relative flex gap-5 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-800/60 ${featured ? "sm:flex-col sm:items-start" : ""}`}>
-      {/* subtle gradient tint on featured */}
-      {featured && (
-        <span className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,rgba(74,222,128,0.05),transparent_60%)]" />
-      )}
-
+    <motion.div
+      style={{ zIndex: total - position }}
+      animate={{
+        rotate: rotations[Math.min(position, rotations.length - 1)],
+        x: xPercents[Math.min(position, xPercents.length - 1)],
+      }}
+      drag={isFront}
+      dragElastic={0.3}
+      dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+      onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        if (info.offset.x < -60) onShuffle();
+      }}
+      transition={{ duration: 0.35 }}
+      className={`absolute left-0 top-0 h-[260px] w-[180px] overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-xl select-none ${
+        isFront ? "cursor-grab active:cursor-grabbing" : ""
+      }`}
+    >
       {/* Cover */}
-      <div className={`relative shrink-0 overflow-hidden rounded-xl shadow-lg ${featured ? "h-36 w-24 sm:h-44 sm:w-28" : "h-36 w-24"}`}>
+      <div className="relative h-[182px] w-full overflow-hidden bg-zinc-800">
         {book.imageUrl && !imgFailed ? (
           <img
             src={book.imageUrl}
-            alt={`Cover of ${book.title}`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            alt={book.title}
+            className="h-full w-full object-cover"
             loading="lazy"
             onError={() => setImgFailed(true)}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-zinc-800">
-            <BookOpen size={22} className="text-zinc-600" />
+          <div className="flex h-full w-full items-center justify-center">
+            <BookOpen size={28} className="text-zinc-600" />
           </div>
         )}
       </div>
 
-      {/* Info */}
-      <div className="flex min-w-0 flex-col justify-center gap-1.5">
-        <p className={`font-semibold leading-snug text-zinc-100 ${featured ? "text-base" : "text-sm"} line-clamp-3`}>
+      {/* Info strip */}
+      <div className="flex flex-col gap-0.5 p-3">
+        <p className="line-clamp-1 text-[11px] font-semibold leading-snug text-zinc-100">
           {book.title}
         </p>
-        <p className="text-xs text-zinc-500">by {book.author}</p>
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-zinc-600">
-          {book.rating && (
-            <span className="flex items-center gap-1">
-              <Star size={12} className="fill-yellow-400 text-yellow-400" />
-              <span className="text-zinc-400">{book.rating.toFixed(2)}</span>
-            </span>
-          )}
-          {book.published && <span>{book.published}</span>}
-        </div>
+        <p className="line-clamp-1 text-[10px] text-zinc-500">{book.author}</p>
+        {book.rating && (
+          <span className="mt-1 flex items-center gap-1 text-[10px] text-zinc-600">
+            <Star size={9} className="fill-yellow-400 text-yellow-400" />
+            {book.rating.toFixed(2)}
+          </span>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
-
-  if (book.bookUrl) {
-    return (
-      <a href={book.bookUrl} target="_blank" rel="noopener noreferrer">
-        {inner}
-      </a>
-    );
-  }
-  return inner;
 }
 
-// ─── Already Read ─────────────────────────────────────────────────────────────
+function BookStack({ books }: { books: BookData[] }) {
+  const [order, setOrder] = useState(() => books.map((_, i) => i));
 
-interface AlreadyReadProps {
-  goodreadsUserId: string;
-  maxBooks?: number;
-}
-
-export function AlreadyRead({ goodreadsUserId, maxBooks = 12 }: AlreadyReadProps) {
-  const [books, setBooks] = useState<BookData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchShelf(goodreadsUserId, "read", maxBooks)
-      .then(setBooks)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [goodreadsUserId, maxBooks]);
-
-  if (loading) {
-    return (
-      <div className="mt-10 border-t border-zinc-800 pt-8">
-        <p className="mb-5 text-xs font-medium uppercase tracking-widest text-zinc-500">
-          Already Read
-        </p>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-28 w-[68px] shrink-0 animate-pulse rounded-lg bg-zinc-800" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (books.length === 0) return null;
+  const handleShuffle = () => {
+    setOrder((prev) => {
+      const next = [...prev];
+      next.push(next.shift()!);
+      return next;
+    });
+  };
 
   return (
-    <div className="mt-10 border-t border-zinc-800 pt-8">
-      <p className="mb-5 text-xs font-medium uppercase tracking-widest text-zinc-500">
-        Already Read
-      </p>
-
-      <div className="relative flex gap-3 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex flex-col items-start gap-4">
+      {/* relative container sized to one card + stack offset */}
+      <div className="relative h-[260px] w-[250px]">
         {books.map((book, i) => (
-          <SpineCover
-            key={book.title + i}
+          <StackCard
+            key={book.title}
             book={book}
-            active={activeIdx === i}
-            onEnter={() => setActiveIdx(i)}
-            onLeave={() => setActiveIdx(null)}
-            tooltipRef={i === activeIdx ? tooltipRef : undefined}
+            position={order.indexOf(i)}
+            total={books.length}
+            isFront={order.indexOf(i) === 0}
+            onShuffle={handleShuffle}
           />
         ))}
       </div>
+      {books.length > 1 && (
+        <p className="text-[10px] text-zinc-600 tracking-wide">← drag to browse</p>
+      )}
     </div>
   );
 }
+
+// ─── Spine cover (already read shelf) ────────────────────────────────────────
 
 function SpineCover({
   book,
@@ -304,4 +233,110 @@ function SpineCover({
     );
   }
   return cover;
+}
+
+// ─── Main export: unified reading section ────────────────────────────────────
+
+interface Props {
+  goodreadsUserId?: string;
+  maxCurrently?: number;
+  maxRead?: number;
+}
+
+export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50 }: Props) {
+  const [currentBooks, setCurrentBooks] = useState<BookData[]>(FALLBACK_BOOKS);
+  const [readBooks, setReadBooks] = useState<BookData[]>([]);
+  const [loading, setLoading] = useState(!!goodreadsUserId);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!goodreadsUserId) return;
+
+    Promise.allSettled([
+      fetchShelf(goodreadsUserId, "currently-reading", maxCurrently),
+      fetchShelf(goodreadsUserId, "read", maxRead),
+    ]).then(([curr, read]) => {
+      if (curr.status === "fulfilled" && curr.value.length > 0) setCurrentBooks(curr.value);
+      if (read.status === "fulfilled") setReadBooks(read.value);
+      setLoading(false);
+    });
+  }, [goodreadsUserId, maxCurrently, maxRead]);
+
+  const LiveDot = () => (
+    <span className="relative flex h-2 w-2 shrink-0">
+      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+      <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+    </span>
+  );
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-12 sm:flex-row sm:gap-16">
+        <div className="flex flex-col gap-3">
+          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+            <LiveDot /> Reading
+          </p>
+          <div className="relative h-[260px] w-[250px]">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                style={{ zIndex: 3 - i, rotate: `${(i - 1) * 5}deg`, left: `${i * 18}%` }}
+                className="absolute h-[260px] w-[180px] animate-pulse rounded-xl bg-zinc-800"
+              />
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
+          <div className="flex gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-28 w-[68px] shrink-0 animate-pulse rounded-lg bg-zinc-800" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-12 sm:flex-row sm:items-start sm:gap-16">
+      {/* Currently reading stack */}
+      <div className="flex flex-col gap-4 shrink-0">
+        <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+          <LiveDot /> Reading
+        </p>
+        <BookStack books={currentBooks} />
+      </div>
+
+      {/* Already read shelf */}
+      {readBooks.length > 0 && (
+        <div className="flex flex-col gap-4 min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+            Read
+          </p>
+          <div className="relative flex gap-3 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {readBooks.map((book, i) => (
+              <SpineCover
+                key={book.title + i}
+                book={book}
+                active={activeIdx === i}
+                onEnter={() => setActiveIdx(i)}
+                onLeave={() => setActiveIdx(null)}
+                tooltipRef={i === activeIdx ? tooltipRef : undefined}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Keep old exports as aliases so nothing else breaks
+export function CurrentlyReading({ goodreadsUserId }: { goodreadsUserId?: string }) {
+  return null;
+}
+export function AlreadyRead({ goodreadsUserId }: { goodreadsUserId: string }) {
+  return null;
 }

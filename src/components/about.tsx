@@ -2,7 +2,7 @@
 
 import { BookOpen } from "lucide-react";
 import { BlurFade } from "@/components/ui/blurFade";
-import { AlreadyRead, CurrentlyReading } from "@/components/ui/goodreadsCurrentlyReading";
+import { ReadingSection } from "@/components/ui/goodreadsCurrentlyReading";
 
 export function About() {
   return (
@@ -77,12 +77,8 @@ export function About() {
               <BookOpen size={20} className="text-green-400" />
               Reading
             </h3>
-            <CurrentlyReading goodreadsUserId="173107363" maxBooks={3} />
+            <ReadingSection goodreadsUserId="173107363" maxCurrently={3} maxRead={50} />
           </div>
-        </BlurFade>
-
-        <BlurFade delay={0.3}>
-          <AlreadyRead goodreadsUserId="173107363" maxBooks={50} />
         </BlurFade>
       </div>
     </section>
