@@ -24,20 +24,35 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
-    const ids = links.map((l) => l.href.slice(1));
-    const observers = ids.map((id) => {
+    const sectionIds = links.map((l) => l.href.slice(1));
+
+    const sectionObservers = sectionIds.map((id) => {
       const el = document.getElementById(id);
       if (!el) return null;
       const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
         { rootMargin: "-40% 0px -55% 0px" }
       );
       obs.observe(el);
       return obs;
     });
-    return () => observers.forEach((obs) => obs?.disconnect());
+
+    // #books is a tiny div inside #about — observe when it scrolls into the top half
+    const booksEl = document.getElementById("books");
+    const booksObs = booksEl
+      ? new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) setActiveSection("books");
+          },
+          { rootMargin: "0px 0px -40% 0px" }
+        )
+      : null;
+    booksObs?.observe(booksEl!);
+
+    return () => {
+      sectionObservers.forEach((obs) => obs?.disconnect());
+      booksObs?.disconnect();
+    };
   }, []);
 
   return (
