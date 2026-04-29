@@ -59,8 +59,8 @@ async function fetchShelf(userId: string, shelf: string, max: number): Promise<B
 
 // ─── Draggable card stack ─────────────────────────────────────────────────────
 
-const ROTATIONS = ["-3deg", "-1deg", "1deg", "3deg"];
-const X_OFFSETS = ["0%", "5%", "10%", "14%"];
+const ROTATIONS = ["-5deg", "0deg", "4deg", "7deg"];
+const X_OFFSETS = ["0%", "15%", "30%", "42%"];
 
 function StackCard({
   book,
@@ -143,8 +143,8 @@ function BookStack({ books }: { books: BookData[] }) {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* card stack — fixed container, cards fan rightward from left-0 */}
-      <div className="relative h-[260px] w-[260px]">
+      {/* container width = card width (180) + max offset (30% of 180 = 54) = 234 */}
+      <div className="relative h-[260px] w-[234px]">
         {books.map((book, i) => (
           <StackCard
             key={book.title}
@@ -157,9 +157,8 @@ function BookStack({ books }: { books: BookData[] }) {
         ))}
       </div>
 
-      {/* arrow buttons — left under leftmost card edge, right under rightmost */}
       {books.length > 1 && (
-        <div className="flex w-[260px] items-center justify-between">
+        <div className="flex w-[234px] items-center justify-between">
           <MorphingArrowButton direction="left" onClick={handlePrev} />
           <MorphingArrowButton direction="right" onClick={handleNext} />
         </div>
@@ -358,7 +357,7 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
 
   return (
     <div className="flex flex-col gap-12 sm:flex-row sm:items-start sm:gap-16">
-      <div className="flex shrink-0 flex-col gap-4">
+      <div className="flex w-full shrink-0 flex-col items-center gap-4 sm:w-auto sm:items-start">
         <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
           <LiveDot /> Reading
         </p>
