@@ -4,7 +4,7 @@ import { AnimatedGradientText } from "@/components/ui/animatedGradientText";
 import { AnimatedNumber } from "@/components/ui/animatedNumber";
 import { BlurFade } from "@/components/ui/blurFade";
 import { useInView } from "framer-motion";
-import { BookOpen, ChevronDown } from "lucide-react";
+import { BookOpen, ChevronDown, Scan, Route } from "lucide-react";
 import { useRef } from "react";
 
 // ─── Big name blur-in (letter by letter) ──────────────────────────────────────
@@ -274,10 +274,54 @@ export function Hero() {
       </BlurFade>
 
       <BlurFade delay={1.15} duration={0.6}>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500">
-          <span>Medical Imaging · Human Motion Prediction</span>
-          <span>·</span>
-          <span>Python · PyTorch · Deep Learning</span>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          {/* Medical Imaging */}
+          <a
+            href="#research"
+            className="group relative flex w-full flex-col gap-2 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 transition-all duration-300 hover:border-violet-500/40 hover:bg-zinc-900 sm:w-64"
+          >
+            <span className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(ellipse_at_top_left,rgba(168,85,247,0.07),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-violet-400">
+                <Scan size={16} />
+                <span className="text-[11px] font-semibold uppercase tracking-widest">Medical Imaging</span>
+              </div>
+              <span className="flex items-center gap-1 text-[10px] text-green-500">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500" />
+                </span>
+                active
+              </span>
+            </div>
+            <p className="text-[12px] leading-relaxed text-zinc-400">
+              Synthesizing healthy brain tissue from tumor-affected MRI scans using deep generative models.
+            </p>
+          </a>
+
+          {/* Motion Prediction */}
+          <a
+            href="#research"
+            className="group relative flex w-full flex-col gap-2 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 transition-all duration-300 hover:border-cyan-500/40 hover:bg-zinc-900 sm:w-64"
+          >
+            <span className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(ellipse_at_top_left,rgba(6,182,212,0.07),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-cyan-400">
+                <Route size={16} />
+                <span className="text-[11px] font-semibold uppercase tracking-widest">Motion Prediction</span>
+              </div>
+              <span className="flex items-center gap-1 text-[10px] text-green-500">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500" />
+                </span>
+                active
+              </span>
+            </div>
+            <p className="text-[12px] leading-relaxed text-zinc-400">
+              Predicting plausible future trajectories for agents in crowded real-world scenes.
+            </p>
+          </a>
         </div>
       </BlurFade>
 
