@@ -44,7 +44,7 @@ export function Experience() {
         <BlurFade>
           <h2 className="mb-3 text-3xl font-bold text-zinc-50">Experience</h2>
           <p className="mb-12 text-zinc-500">
-            Three years of teaching and mentoring across 300+ students.
+            Three years of teaching and mentoring, staying in close contact with 6 students.
           </p>
         </BlurFade>
 

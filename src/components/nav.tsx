@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { GradientMenu } from "@/components/ui/gradient-menu";
 
 const links = [
   { href: "#research", label: "Research" },
@@ -55,21 +56,9 @@ export function Nav() {
           Jesse Annan
         </a>
 
-        {/* Desktop links */}
-        <div className="hidden items-center gap-6 sm:flex">
-          {links.map(({ href, label }) => (
-            <a
-              key={href}
-              href={href}
-              className={`text-xs font-medium transition-colors ${
-                activeSection === href.slice(1)
-                  ? "text-green-400"
-                  : "text-zinc-500 hover:text-zinc-100"
-              }`}
-            >
-              {label}
-            </a>
-          ))}
+        {/* Desktop gradient pills */}
+        <div className="hidden sm:flex">
+          <GradientMenu activeSection={activeSection} />
         </div>
 
         {/* Mobile hamburger */}

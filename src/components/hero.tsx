@@ -101,7 +101,7 @@ const SPORTS = [
 // ─── Stats ────────────────────────────────────────────────────────────────────
 
 const STATS = [
-  { value: 300, suffix: "+", label: "Students Mentored" },
+  { value: 6, suffix: "", label: "Students Mentored" },
   { value: 3, suffix: "", label: "Years Teaching" },
   { value: 2, suffix: "", label: "Active Research Projects" },
 ];

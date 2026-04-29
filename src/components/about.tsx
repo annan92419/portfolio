@@ -41,8 +41,8 @@ export function About() {
 
           <BlurFade delay={0.15}>
             <p>
-              I&apos;ve spent three years teaching and mentoring — over 300
-              students across statistics, data science, and CS theory — and that
+              I&apos;ve spent three years teaching and mentoring — staying in
+              close contact with 6 students across statistics, data science, and CS theory — and that
               work has shaped how I think about research communication. I write
               code and papers with the same goal: make the idea clear enough
               that someone else can build on it. I&apos;m looking for research
