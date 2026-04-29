@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen } from "lucide-react";
+import { BookOpen, PenLine } from "lucide-react";
 import { BlurFade } from "@/components/ui/blurFade";
 import { ReadingSection } from "@/components/ui/goodreadsCurrentlyReading";
 
@@ -18,7 +18,7 @@ export function About() {
             <p>
               I&apos;m a Computer Science PhD student at Georgia State
               University, where I also hold an MS in Mathematics &amp; Computer
-              Science (GPA 3.81, Scientific Computing track). My current
+              Science. My current
               research focuses on two problems: synthesizing healthy brain
               tissue from tumor-affected MRI scans, and predicting plausible
               future trajectories for agents in crowded scenes. Both sit at the
@@ -75,15 +75,31 @@ export function About() {
         </BlurFade>
 
         <BlurFade delay={0.25}>
-          <div id="books" className="mt-14 border-t border-zinc-800 pt-10">
+          <div className="mt-10 border-t border-zinc-800 pt-8">
+            <a
+              href="https://medium.com/@jesse419419"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 text-sm text-zinc-400 transition-colors hover:text-zinc-50"
+            >
+              <PenLine size={16} className="text-green-400" />
+              I write occasionally on Medium
+              <span className="text-zinc-600 transition-colors group-hover:text-zinc-400">↗</span>
+            </a>
+          </div>
+        </BlurFade>
+
+        <BlurFade delay={0.3}>
+          <div id="books" className="mt-10 border-t border-zinc-800 pt-10">
             <h3 className="mb-8 flex items-center gap-2 text-xl font-bold text-zinc-50">
               <BookOpen size={20} className="text-green-400" />
               Reading
             </h3>
-            <ReadingSection goodreadsUserId="173107363" maxCurrently={3} maxRead={50} />
+            <ReadingSection goodreadsUserId="173107363" maxCurrently={3} maxRead={200} />
           </div>
         </BlurFade>
       </div>
     </section>
+
   );
 }
