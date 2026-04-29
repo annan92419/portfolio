@@ -1,7 +1,7 @@
 "use client";
 
 import { BookOpen, Star } from "lucide-react";
-import { motion, PanInfo } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 interface BookData {
@@ -56,7 +56,10 @@ async function fetchShelf(userId: string, shelf: string, max: number): Promise<B
   }));
 }
 
-// ─── Book stack card (draggable) ──────────────────────────────────────────────
+// ─── Draggable card stack ─────────────────────────────────────────────────────
+
+const ROTATIONS = ["-5deg", "0deg", "5deg", "8deg"];
+const X_OFFSETS = ["0%", "20%", "40%", "55%"];
 
 function StackCard({
   book,
@@ -72,29 +75,24 @@ function StackCard({
   onShuffle: () => void;
 }) {
   const [imgFailed, setImgFailed] = useState(false);
-  const rotations = ["-5deg", "0deg", "5deg", "8deg"];
-  const xPercents = ["0%", "18%", "36%", "52%"];
+  const pos = Math.min(position, ROTATIONS.length - 1);
 
   return (
     <motion.div
       style={{ zIndex: total - position }}
-      animate={{
-        rotate: rotations[Math.min(position, rotations.length - 1)],
-        x: xPercents[Math.min(position, xPercents.length - 1)],
-      }}
-      drag={isFront}
-      dragElastic={0.3}
-      dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
-      onDragEnd={(_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-        if (info.offset.x < -60) onShuffle();
+      animate={{ rotate: ROTATIONS[pos], x: X_OFFSETS[pos] }}
+      drag={isFront ? "x" : false}
+      dragElastic={0.5}
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={(_, info) => {
+        if (info.offset.x < -50) onShuffle();
       }}
       transition={{ duration: 0.35 }}
-      className={`absolute left-0 top-0 h-[260px] w-[180px] overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-xl select-none ${
-        isFront ? "cursor-grab active:cursor-grabbing" : ""
+      className={`absolute left-0 top-0 h-[260px] w-[180px] select-none overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-xl ${
+        isFront ? "cursor-grab active:cursor-grabbing" : "pointer-events-none"
       }`}
     >
-      {/* Cover */}
-      <div className="relative h-[182px] w-full overflow-hidden bg-zinc-800">
+      <div className="h-[182px] w-full overflow-hidden bg-zinc-800">
         {book.imageUrl && !imgFailed ? (
           <img
             src={book.imageUrl}
@@ -109,12 +107,8 @@ function StackCard({
           </div>
         )}
       </div>
-
-      {/* Info strip */}
       <div className="flex flex-col gap-0.5 p-3">
-        <p className="line-clamp-1 text-[11px] font-semibold leading-snug text-zinc-100">
-          {book.title}
-        </p>
+        <p className="line-clamp-1 text-[11px] font-semibold text-zinc-100">{book.title}</p>
         <p className="line-clamp-1 text-[10px] text-zinc-500">{book.author}</p>
         {book.rating && (
           <span className="mt-1 flex items-center gap-1 text-[10px] text-zinc-600">
@@ -140,8 +134,7 @@ function BookStack({ books }: { books: BookData[] }) {
 
   return (
     <div className="flex flex-col items-start gap-4">
-      {/* relative container sized to one card + stack offset */}
-      <div className="relative h-[260px] w-[250px]">
+      <div className="relative h-[260px] w-[260px]">
         {books.map((book, i) => (
           <StackCard
             key={book.title}
@@ -154,13 +147,13 @@ function BookStack({ books }: { books: BookData[] }) {
         ))}
       </div>
       {books.length > 1 && (
-        <p className="text-[10px] text-zinc-600 tracking-wide">← drag to browse</p>
+        <p className="text-[10px] text-zinc-600 tracking-wide">swipe left to browse</p>
       )}
     </div>
   );
 }
 
-// ─── Spine cover (already read shelf) ────────────────────────────────────────
+// ─── Two-row spine shelf ──────────────────────────────────────────────────────
 
 function SpineCover({
   book,
@@ -179,7 +172,7 @@ function SpineCover({
 
   const cover = (
     <div
-      className={`relative h-28 w-[68px] shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md transition-all duration-200 ${
+      className={`relative h-[120px] w-[78px] shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md transition-all duration-200 ${
         active
           ? "scale-110 shadow-lg shadow-green-500/20 ring-1 ring-green-500/60"
           : "opacity-75 hover:opacity-100"
@@ -197,7 +190,7 @@ function SpineCover({
         />
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-zinc-800 px-1">
-          <BookOpen size={16} className="text-zinc-600" />
+          <BookOpen size={18} className="text-zinc-600" />
           <p className="line-clamp-3 text-center text-[8px] leading-tight text-zinc-600">
             {book.title}
           </p>
@@ -226,16 +219,44 @@ function SpineCover({
   );
 
   if (book.bookUrl) {
-    return (
-      <a href={book.bookUrl} target="_blank" rel="noopener noreferrer">
-        {cover}
-      </a>
-    );
+    return <a href={book.bookUrl} target="_blank" rel="noopener noreferrer">{cover}</a>;
   }
   return cover;
 }
 
-// ─── Main export: unified reading section ────────────────────────────────────
+function ReadShelf({ books }: { books: BookData[] }) {
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  // split roughly in half; first row gets the extra book if odd number
+  const split = Math.ceil(books.length / 2);
+  const row1 = books.slice(0, split);
+  const row2 = books.slice(split);
+
+  const renderRow = (rowBooks: BookData[], offset: number) => (
+    <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {rowBooks.map((book, i) => (
+        <SpineCover
+          key={book.title + (i + offset)}
+          book={book}
+          active={activeIdx === i + offset}
+          onEnter={() => setActiveIdx(i + offset)}
+          onLeave={() => setActiveIdx(null)}
+          tooltipRef={(i + offset) === activeIdx ? tooltipRef : undefined}
+        />
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-2">
+      {renderRow(row1, 0)}
+      {row2.length > 0 && renderRow(row2, split)}
+    </div>
+  );
+}
+
+// ─── Unified section ──────────────────────────────────────────────────────────
 
 interface Props {
   goodreadsUserId?: string;
@@ -247,12 +268,9 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
   const [currentBooks, setCurrentBooks] = useState<BookData[]>(FALLBACK_BOOKS);
   const [readBooks, setReadBooks] = useState<BookData[]>([]);
   const [loading, setLoading] = useState(!!goodreadsUserId);
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!goodreadsUserId) return;
-
     Promise.allSettled([
       fetchShelf(goodreadsUserId, "currently-reading", maxCurrently),
       fetchShelf(goodreadsUserId, "read", maxRead),
@@ -273,25 +291,29 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
   if (loading) {
     return (
       <div className="flex flex-col gap-12 sm:flex-row sm:gap-16">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             <LiveDot /> Reading
           </p>
-          <div className="relative h-[260px] w-[250px]">
+          <div className="relative h-[260px] w-[260px]">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                style={{ zIndex: 3 - i, rotate: `${(i - 1) * 5}deg`, left: `${i * 18}%` }}
+                style={{ zIndex: 3 - i, left: `${i * 20}%` }}
                 className="absolute h-[260px] w-[180px] animate-pulse rounded-xl bg-zinc-800"
               />
             ))}
           </div>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
-          <div className="flex gap-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-28 w-[68px] shrink-0 animate-pulse rounded-lg bg-zinc-800" />
+          <div className="flex flex-col gap-2">
+            {[0, 1].map((row) => (
+              <div key={row} className="flex gap-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="h-[120px] w-[78px] shrink-0 animate-pulse rounded-lg bg-zinc-800" />
+                ))}
+              </div>
             ))}
           </div>
         </div>
@@ -301,42 +323,22 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
 
   return (
     <div className="flex flex-col gap-12 sm:flex-row sm:items-start sm:gap-16">
-      {/* Currently reading stack */}
-      <div className="flex flex-col gap-4 shrink-0">
+      <div className="flex shrink-0 flex-col gap-4">
         <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
           <LiveDot /> Reading
         </p>
         <BookStack books={currentBooks} />
       </div>
 
-      {/* Already read shelf */}
       {readBooks.length > 0 && (
-        <div className="flex flex-col gap-4 min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
-            Read
-          </p>
-          <div className="relative flex gap-3 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {readBooks.map((book, i) => (
-              <SpineCover
-                key={book.title + i}
-                book={book}
-                active={activeIdx === i}
-                onEnter={() => setActiveIdx(i)}
-                onLeave={() => setActiveIdx(null)}
-                tooltipRef={i === activeIdx ? tooltipRef : undefined}
-              />
-            ))}
-          </div>
+        <div className="flex min-w-0 flex-col gap-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
+          <ReadShelf books={readBooks} />
         </div>
       )}
     </div>
   );
 }
 
-// Keep old exports as aliases so nothing else breaks
-export function CurrentlyReading({ goodreadsUserId }: { goodreadsUserId?: string }) {
-  return null;
-}
-export function AlreadyRead({ goodreadsUserId }: { goodreadsUserId: string }) {
-  return null;
-}
+export function CurrentlyReading({ goodreadsUserId: _ }: { goodreadsUserId?: string }) { return null; }
+export function AlreadyRead({ goodreadsUserId: _ }: { goodreadsUserId: string }) { return null; }
