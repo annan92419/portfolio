@@ -86,16 +86,16 @@ function MiniVinyl({ color }: { color: string }) {
 }
 
 const VINYLS = [
-  { color: "#86efac", title: "Billie Eilish — When We All Fall Asleep, Where Do We Go?" },
-  { color: "#fbbf24", title: "Kendrick Lamar — good kid, m.A.A.d city" },
-  { color: "#a78bfa", title: "Måneskin — Chosen" },
+  { color: "#86efac", title: "Billie Eilish — When We All Fall Asleep, Where Do We Go?", url: "https://www.amazon.com/s?k=billie+eilish+when+we+all+fall+asleep+vinyl" },
+  { color: "#fbbf24", title: "Kendrick Lamar — good kid, m.A.A.d city", url: "https://www.amazon.com/s?k=kendrick+lamar+good+kid+maad+city+vinyl" },
+  { color: "#a78bfa", title: "Måneskin — Chosen", url: "https://www.amazon.com/s?k=maneskin+chosen+vinyl" },
 ];
 
 const SPORTS = [
-  { abbr: "A", label: "Arsenal", color: "#EF0107" },
-  { abbr: "O", label: "OKC Thunder", color: "#007AC1" },
-  { abbr: "R", label: "Baltimore Ravens", color: "#241773" },
-  { abbr: "E", label: "Edmonton Oilers", color: "#FF4C00" },
+  { abbr: "A", label: "Arsenal", color: "#EF0107", url: "https://www.arsenal.com" },
+  { abbr: "O", label: "OKC Thunder", color: "#007AC1", url: "https://www.nba.com/thunder" },
+  { abbr: "R", label: "Baltimore Ravens", color: "#241773", url: "https://www.baltimoreravens.com" },
+  { abbr: "E", label: "Edmonton Oilers", color: "#FF4C00", url: "https://www.nhl.com/oilers" },
 ];
 
 // ─── Stats ────────────────────────────────────────────────────────────────────
@@ -141,7 +141,7 @@ export function Hero() {
           <div className="min-w-0">
             <p className="text-[11px] font-medium text-zinc-300">Reading</p>
             <a
-              href="#about"
+              href="#books"
               className="text-[10px] text-zinc-600 transition-colors hover:text-green-500"
             >
               See current shelf ↓
@@ -173,9 +173,9 @@ export function Hero() {
         <div className="flex items-center gap-2.5">
           <div className="flex gap-0.5 shrink-0">
             {VINYLS.map((v) => (
-              <div key={v.color} title={v.title}>
+              <a key={v.color} href={v.url} target="_blank" rel="noopener noreferrer" title={v.title} className="opacity-80 hover:opacity-100 transition-opacity">
                 <MiniVinyl color={v.color} />
-              </div>
+              </a>
             ))}
           </div>
           <div>
@@ -187,15 +187,18 @@ export function Hero() {
         {/* Sports */}
         <div className="flex items-center gap-2.5">
           <div className="grid grid-cols-2 gap-1 shrink-0">
-            {SPORTS.map(({ abbr, label, color }) => (
-              <div
+            {SPORTS.map(({ abbr, label, color, url }) => (
+              <a
                 key={abbr}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
                 title={label}
-                className="flex h-[18px] w-[18px] items-center justify-center rounded-full text-[8px] font-bold text-white"
+                className="flex h-[18px] w-[18px] items-center justify-center rounded-full text-[8px] font-bold text-white opacity-80 hover:opacity-100 hover:scale-110 transition-all"
                 style={{ backgroundColor: color }}
               >
                 {abbr}
-              </div>
+              </a>
             ))}
           </div>
           <div>

@@ -38,7 +38,7 @@ export function GradientMenu({ activeSection }: { activeSection?: string }) {
                 ${isActive ? "opacity-40" : "opacity-0 group-hover:opacity-40"}`}
             />
 
-            <a href={href} className="absolute inset-0 rounded-full" aria-label={title} />
+            <a href={href} className="absolute inset-0 z-20 rounded-full" aria-label={title} />
 
             {/* icon — hidden when active or hovered */}
             <span
