@@ -37,21 +37,22 @@ export function Nav() {
       return obs;
     });
 
-    // #books is a tiny div inside #about — observe when it scrolls into the top half
-    const booksEl = document.getElementById("books");
-    const booksObs = booksEl
-      ? new IntersectionObserver(
-          ([entry]) => {
-            if (entry.isIntersecting) setActiveSection("books");
-          },
-          { rootMargin: "0px 0px -40% 0px" }
-        )
-      : null;
-    booksObs?.observe(booksEl!);
+    // Short/anchor sections need a looser observer — fires when in top 60% of viewport
+    const looseIds = ["books", "contact"];
+    const looseObservers = looseIds.map((id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { rootMargin: "0px 0px -40% 0px" }
+      );
+      obs.observe(el);
+      return obs;
+    });
 
     return () => {
       sectionObservers.forEach((obs) => obs?.disconnect());
-      booksObs?.disconnect();
+      looseObservers.forEach((obs) => obs?.disconnect());
     };
   }, []);
 
