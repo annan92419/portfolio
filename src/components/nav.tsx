@@ -37,22 +37,26 @@ export function Nav() {
       return obs;
     });
 
-    // Short/anchor sections need a looser observer — fires when in top 60% of viewport
-    const looseIds = ["books", "contact"];
-    const looseObservers = looseIds.map((id) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { rootMargin: "0px 0px -40% 0px" }
-      );
-      obs.observe(el);
-      return obs;
-    });
+    // #books is a zero-height anchor — fires when it enters the top 60% of viewport
+    const booksEl = document.getElementById("books");
+    const booksObs = booksEl ? new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setActiveSection("books"); },
+      { rootMargin: "0px 0px -40% 0px" }
+    ) : null;
+    booksObs?.observe(booksEl!);
+
+    // #contact is short — only activate when it's well into the viewport (not just peeking)
+    const contactEl = document.getElementById("contact");
+    const contactObs = contactEl ? new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setActiveSection("contact"); },
+      { rootMargin: "-15% 0px -50% 0px" }
+    ) : null;
+    contactObs?.observe(contactEl!);
 
     return () => {
       sectionObservers.forEach((obs) => obs?.disconnect());
-      looseObservers.forEach((obs) => obs?.disconnect());
+      booksObs?.disconnect();
+      contactObs?.disconnect();
     };
   }, []);
 
