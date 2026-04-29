@@ -3,6 +3,7 @@
 import { BookOpen, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { MorphingArrowButton } from "@/components/ui/morphing-arrow-button";
 
 interface BookData {
   title: string;
@@ -66,13 +67,13 @@ function StackCard({
   position,
   total,
   isFront,
-  onShuffle,
+  onNext,
 }: {
   book: BookData;
   position: number;
   total: number;
   isFront: boolean;
-  onShuffle: () => void;
+  onNext: () => void;
 }) {
   const [imgFailed, setImgFailed] = useState(false);
   const pos = Math.min(position, ROTATIONS.length - 1);
@@ -85,7 +86,7 @@ function StackCard({
       dragElastic={0.5}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={(_, info) => {
-        if (info.offset.x < -50) onShuffle();
+        if (info.offset.x < -50) onNext();
       }}
       transition={{ duration: 0.35 }}
       className={`absolute left-0 top-0 h-[260px] w-[180px] select-none overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-xl ${
@@ -124,7 +125,7 @@ function StackCard({
 function BookStack({ books }: { books: BookData[] }) {
   const [order, setOrder] = useState(() => books.map((_, i) => i));
 
-  const handleShuffle = () => {
+  const handleNext = () => {
     setOrder((prev) => {
       const next = [...prev];
       next.push(next.shift()!);
@@ -132,8 +133,17 @@ function BookStack({ books }: { books: BookData[] }) {
     });
   };
 
+  const handlePrev = () => {
+    setOrder((prev) => {
+      const next = [...prev];
+      next.unshift(next.pop()!);
+      return next;
+    });
+  };
+
   return (
-    <div className="flex flex-col items-start gap-4">
+    <div className="flex flex-col items-center gap-6">
+      {/* card stack — fixed container, cards fan rightward from left-0 */}
       <div className="relative h-[260px] w-[260px]">
         {books.map((book, i) => (
           <StackCard
@@ -142,12 +152,17 @@ function BookStack({ books }: { books: BookData[] }) {
             position={order.indexOf(i)}
             total={books.length}
             isFront={order.indexOf(i) === 0}
-            onShuffle={handleShuffle}
+            onNext={handleNext}
           />
         ))}
       </div>
+
+      {/* arrow buttons — left under leftmost card edge, right under rightmost */}
       {books.length > 1 && (
-        <p className="text-[10px] text-zinc-600 tracking-wide">swipe left to browse</p>
+        <div className="flex w-[260px] items-center justify-between">
+          <MorphingArrowButton direction="left" onClick={handlePrev} />
+          <MorphingArrowButton direction="right" onClick={handleNext} />
+        </div>
       )}
     </div>
   );
@@ -227,14 +242,28 @@ function SpineCover({
 function ReadShelf({ books }: { books: BookData[] }) {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
 
-  // split roughly in half; first row gets the extra book if odd number
   const split = Math.ceil(books.length / 2);
   const row1 = books.slice(0, split);
   const row2 = books.slice(split);
 
-  const renderRow = (rowBooks: BookData[], offset: number) => (
-    <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+  const scrollBoth = (dir: "left" | "right") => {
+    const amount = dir === "right" ? 320 : -320;
+    row1Ref.current?.scrollBy({ left: amount, behavior: "smooth" });
+    row2Ref.current?.scrollBy({ left: amount, behavior: "smooth" });
+  };
+
+  const renderRow = (
+    rowBooks: BookData[],
+    offset: number,
+    ref: React.RefObject<HTMLDivElement | null>
+  ) => (
+    <div
+      ref={ref}
+      className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
       {rowBooks.map((book, i) => (
         <SpineCover
           key={book.title + (i + offset)}
@@ -250,8 +279,14 @@ function ReadShelf({ books }: { books: BookData[] }) {
 
   return (
     <div className="flex flex-col gap-2">
-      {renderRow(row1, 0)}
-      {row2.length > 0 && renderRow(row2, split)}
+      {renderRow(row1, 0, row1Ref)}
+      {row2.length > 0 && renderRow(row2, split, row2Ref)}
+
+      {/* arrows: left under first book's left edge, right under last book's right edge */}
+      <div className="flex items-center justify-between pt-2">
+        <MorphingArrowButton direction="left" onClick={() => scrollBoth("left")} />
+        <MorphingArrowButton direction="right" onClick={() => scrollBoth("right")} />
+      </div>
     </div>
   );
 }
@@ -291,7 +326,7 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
   if (loading) {
     return (
       <div className="flex flex-col gap-12 sm:flex-row sm:gap-16">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4">
           <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             <LiveDot /> Reading
           </p>
