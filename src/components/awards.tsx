@@ -33,7 +33,7 @@ const skills = {
   "Machine Learning": [
     "ML Algorithms",
     "Deep Learning",
-    "NLP",
+
     "Computer Vision",
     "Feature Engineering",
     "Data Preprocessing",

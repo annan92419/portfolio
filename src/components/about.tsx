@@ -30,7 +30,7 @@ export function About() {
           <BlurFade delay={0.1}>
             <p>
               Before the PhD, I developed a strong foundation in statistical
-              modeling, NLP, and computer vision through graduate coursework and
+              modeling and computer vision through graduate coursework and
               independent projects — from RetinaNet-based tumor detection
               (94% mAP) to logistic regression sentiment analysis on 14K+ tweets
               to the first ML study of student hostel pricing at KNUST, Ghana.
@@ -46,9 +46,12 @@ export function About() {
               close contact with 6 students across statistics, data science, and CS theory — and that
               work has shaped how I think about research communication. I write
               code and papers with the same goal: make the idea clear enough
-              that someone else can build on it. I&apos;m looking for research
+              that someone else can build on it. Beyond the lab, I&apos;m
+              drawn to sports science — the idea of applying ML and data
+              analysis to athletic performance and human movement is something
+              I actively want to build toward. I&apos;m looking for research
               collaborations, internships, and roles in ML engineering or
-              applied AI where that combination of rigor and clarity is valued.
+              applied AI where that combination of rigor and curiosity is valued.
             </p>
           </BlurFade>
         </div>
