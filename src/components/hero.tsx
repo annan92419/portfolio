@@ -4,7 +4,7 @@ import { AnimatedGradientText } from "@/components/ui/animatedGradientText";
 import { AnimatedNumber } from "@/components/ui/animatedNumber";
 import { BlurFade } from "@/components/ui/blurFade";
 import { useInView } from "framer-motion";
-import { BookOpen, ChevronDown, Scan, Route } from "lucide-react";
+import { BookOpen, ChevronDown, Scan, Route, Dumbbell } from "lucide-react";
 import { useRef } from "react";
 
 // ─── Big name blur-in (letter by letter) ──────────────────────────────────────
@@ -274,7 +274,7 @@ export function Hero() {
       </BlurFade>
 
       <BlurFade delay={1.15} duration={0.6}>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
           {/* Medical Imaging */}
           <a
             href="#research"
@@ -320,6 +320,25 @@ export function Hero() {
             </div>
             <p className="text-[12px] leading-relaxed text-zinc-400">
               Predicting plausible future trajectories for agents in crowded real-world scenes.
+            </p>
+          </a>
+          {/* Sports Science */}
+          <a
+            href="#about"
+            className="group relative flex w-full flex-col gap-2 overflow-hidden rounded-xl border border-zinc-800 border-dashed bg-zinc-900/40 p-4 transition-all duration-300 hover:border-orange-500/40 hover:bg-zinc-900 sm:w-64"
+          >
+            <span className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(ellipse_at_top_left,rgba(249,115,22,0.07),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-orange-400">
+                <Dumbbell size={16} />
+                <span className="text-[11px] font-semibold uppercase tracking-widest">Sports Science</span>
+              </div>
+              <span className="rounded-full border border-orange-500/30 px-1.5 py-0.5 text-[9px] font-medium text-orange-400">
+                aspiring
+              </span>
+            </div>
+            <p className="text-[12px] leading-relaxed text-zinc-500">
+              Applying ML and data analysis to athletic performance and human movement.
             </p>
           </a>
         </div>
