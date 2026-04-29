@@ -57,7 +57,7 @@ async function fetchShelf(userId: string, shelf: string, max: number): Promise<B
   }));
 }
 
-// ─── Draggable card stack ─────────────────────────────────────────────────────
+// ─── Draggable card (no arrows — arrows live at column level) ─────────────────
 
 const ROTATIONS = ["-5deg", "0deg", "4deg", "7deg"];
 const X_OFFSETS = ["0%", "15%", "30%", "42%"];
@@ -85,9 +85,7 @@ function StackCard({
       drag={isFront ? "x" : false}
       dragElastic={0.5}
       dragConstraints={{ left: 0, right: 0 }}
-      onDragEnd={(_, info) => {
-        if (info.offset.x < -50) onNext();
-      }}
+      onDragEnd={(_, info) => { if (info.offset.x < -50) onNext(); }}
       transition={{ duration: 0.35 }}
       className={`absolute left-0 top-0 h-[260px] w-[180px] select-none overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-xl ${
         isFront ? "cursor-grab active:cursor-grabbing" : "pointer-events-none"
@@ -95,17 +93,9 @@ function StackCard({
     >
       <div className="h-[182px] w-full overflow-hidden bg-zinc-800">
         {book.imageUrl && !imgFailed ? (
-          <img
-            src={book.imageUrl}
-            alt={book.title}
-            className="h-full w-full object-cover"
-            loading="lazy"
-            onError={() => setImgFailed(true)}
-          />
+          <img src={book.imageUrl} alt={book.title} className="h-full w-full object-cover" loading="lazy" onError={() => setImgFailed(true)} />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <BookOpen size={28} className="text-zinc-600" />
-          </div>
+          <div className="flex h-full w-full items-center justify-center"><BookOpen size={28} className="text-zinc-600" /></div>
         )}
       </div>
       <div className="flex flex-col gap-0.5 p-3">
@@ -122,64 +112,28 @@ function StackCard({
   );
 }
 
-function BookStack({ books }: { books: BookData[] }) {
-  const [order, setOrder] = useState(() => books.map((_, i) => i));
-
-  const handleNext = () => {
-    setOrder((prev) => {
-      const next = [...prev];
-      next.push(next.shift()!);
-      return next;
-    });
-  };
-
-  const handlePrev = () => {
-    setOrder((prev) => {
-      const next = [...prev];
-      next.unshift(next.pop()!);
-      return next;
-    });
-  };
-
+function BookStack({ books, order, onNext }: { books: BookData[]; order: number[]; onNext: () => void }) {
   return (
-    <div className="flex flex-col items-center gap-6">
-      {/* container width = card width (180) + max offset (30% of 180 = 54) = 234 */}
-      <div className="relative h-[260px] w-[234px]">
-        {books.map((book, i) => (
-          <StackCard
-            key={book.title}
-            book={book}
-            position={order.indexOf(i)}
-            total={books.length}
-            isFront={order.indexOf(i) === 0}
-            onNext={handleNext}
-          />
-        ))}
-      </div>
-
-      {books.length > 1 && (
-        <div className="flex w-[234px] items-center justify-between">
-          <MorphingArrowButton direction="left" onClick={handlePrev} />
-          <MorphingArrowButton direction="right" onClick={handleNext} />
-        </div>
-      )}
+    <div className="relative h-[260px] w-[234px]">
+      {books.map((book, i) => (
+        <StackCard
+          key={book.title}
+          book={book}
+          position={order.indexOf(i)}
+          total={books.length}
+          isFront={order.indexOf(i) === 0}
+          onNext={onNext}
+        />
+      ))}
     </div>
   );
 }
 
-// ─── Two-row spine shelf ──────────────────────────────────────────────────────
+// ─── Spine cover ──────────────────────────────────────────────────────────────
 
-function SpineCover({
-  book,
-  active,
-  onEnter,
-  onLeave,
-  tooltipRef,
-}: {
-  book: BookData;
-  active: boolean;
-  onEnter: () => void;
-  onLeave: () => void;
+function SpineCover({ book, active, onEnter, onLeave, tooltipRef }: {
+  book: BookData; active: boolean;
+  onEnter: () => void; onLeave: () => void;
   tooltipRef?: React.RefObject<HTMLDivElement | null>;
 }) {
   const [imgFailed, setImgFailed] = useState(false);
@@ -187,38 +141,21 @@ function SpineCover({
   const cover = (
     <div
       className={`relative h-[120px] w-[78px] shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-md transition-all duration-200 ${
-        active
-          ? "scale-110 shadow-lg shadow-green-500/20 ring-1 ring-green-500/60"
-          : "opacity-75 hover:opacity-100"
+        active ? "scale-110 shadow-lg shadow-green-500/20 ring-1 ring-green-500/60" : "opacity-75 hover:opacity-100"
       }`}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
+      onMouseEnter={onEnter} onMouseLeave={onLeave}
     >
       {book.imageUrl && !imgFailed ? (
-        <img
-          src={book.imageUrl}
-          alt={`Cover of ${book.title}`}
-          className="h-full w-full object-cover"
-          loading="lazy"
-          onError={() => setImgFailed(true)}
-        />
+        <img src={book.imageUrl} alt={`Cover of ${book.title}`} className="h-full w-full object-cover" loading="lazy" onError={() => setImgFailed(true)} />
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-zinc-800 px-1">
           <BookOpen size={18} className="text-zinc-600" />
-          <p className="line-clamp-3 text-center text-[8px] leading-tight text-zinc-600">
-            {book.title}
-          </p>
+          <p className="line-clamp-3 text-center text-[8px] leading-tight text-zinc-600">{book.title}</p>
         </div>
       )}
-
       {active && (
-        <div
-          ref={tooltipRef}
-          className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2.5 w-44 -translate-x-1/2 rounded-xl border border-zinc-700 bg-zinc-900 p-3 shadow-xl"
-        >
-          <p className="line-clamp-2 text-xs font-semibold leading-snug text-zinc-100">
-            {book.title}
-          </p>
+        <div ref={tooltipRef} className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2.5 w-44 -translate-x-1/2 rounded-xl border border-zinc-700 bg-zinc-900 p-3 shadow-xl">
+          <p className="line-clamp-2 text-xs font-semibold leading-snug text-zinc-100">{book.title}</p>
           <p className="mt-0.5 text-[11px] text-zinc-500">by {book.author}</p>
           {book.rating && (
             <span className="mt-1.5 flex items-center gap-1 text-[11px] text-zinc-500">
@@ -232,37 +169,25 @@ function SpineCover({
     </div>
   );
 
-  if (book.bookUrl) {
-    return <a href={book.bookUrl} target="_blank" rel="noopener noreferrer">{cover}</a>;
-  }
+  if (book.bookUrl) return <a href={book.bookUrl} target="_blank" rel="noopener noreferrer">{cover}</a>;
   return cover;
 }
 
-function ReadShelf({ books }: { books: BookData[] }) {
+// ─── Two-row shelf (no arrows — arrows live at column level) ──────────────────
+
+function ReadShelf({ books, row1Ref, row2Ref }: {
+  books: BookData[];
+  row1Ref: React.RefObject<HTMLDivElement | null>;
+  row2Ref: React.RefObject<HTMLDivElement | null>;
+}) {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const row1Ref = useRef<HTMLDivElement>(null);
-  const row2Ref = useRef<HTMLDivElement>(null);
-
   const split = Math.ceil(books.length / 2);
   const row1 = books.slice(0, split);
   const row2 = books.slice(split);
 
-  const scrollBoth = (dir: "left" | "right") => {
-    const amount = dir === "right" ? 320 : -320;
-    row1Ref.current?.scrollBy({ left: amount, behavior: "smooth" });
-    row2Ref.current?.scrollBy({ left: amount, behavior: "smooth" });
-  };
-
-  const renderRow = (
-    rowBooks: BookData[],
-    offset: number,
-    ref: React.RefObject<HTMLDivElement | null>
-  ) => (
-    <div
-      ref={ref}
-      className="flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden justify-start"
-    >
+  const renderRow = (rowBooks: BookData[], offset: number, ref: React.RefObject<HTMLDivElement | null>) => (
+    <div ref={ref} className="flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {rowBooks.map((book, i) => (
         <SpineCover
           key={book.title + (i + offset)}
@@ -280,12 +205,6 @@ function ReadShelf({ books }: { books: BookData[] }) {
     <div className="flex flex-col gap-2">
       {renderRow(row1, 0, row1Ref)}
       {row2.length > 0 && renderRow(row2, split, row2Ref)}
-
-      {/* arrows: left under first book's left edge, right under last book's right edge */}
-      <div className="flex items-center justify-between pt-2">
-        <MorphingArrowButton direction="left" onClick={() => scrollBoth("left")} />
-        <MorphingArrowButton direction="right" onClick={() => scrollBoth("right")} />
-      </div>
     </div>
   );
 }
@@ -302,6 +221,21 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
   const [currentBooks, setCurrentBooks] = useState<BookData[]>(FALLBACK_BOOKS);
   const [readBooks, setReadBooks] = useState<BookData[]>([]);
   const [loading, setLoading] = useState(!!goodreadsUserId);
+
+  // card stack order
+  const [order, setOrder] = useState<number[]>([]);
+  useEffect(() => { setOrder(currentBooks.map((_, i) => i)); }, [currentBooks]);
+  const handleNext = () => setOrder(prev => { const n = [...prev]; n.push(n.shift()!); return n; });
+  const handlePrev = () => setOrder(prev => { const n = [...prev]; n.unshift(n.pop()!); return n; });
+
+  // shelf scroll refs
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+  const scrollBoth = (dir: "left" | "right") => {
+    const amount = dir === "right" ? 320 : -320;
+    row1Ref.current?.scrollBy({ left: amount, behavior: "smooth" });
+    row2Ref.current?.scrollBy({ left: amount, behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (!goodreadsUserId) return;
@@ -324,31 +258,29 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-12 sm:flex-row sm:gap-16">
-        <div className="flex flex-col items-center gap-4">
-          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
-            <LiveDot /> Reading
-          </p>
-          <div className="relative h-[260px] w-[260px]">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                style={{ zIndex: 3 - i, left: `${i * 20}%` }}
-                className="absolute h-[260px] w-[180px] animate-pulse rounded-xl bg-zinc-800"
-              />
-            ))}
+      <div className="flex flex-col gap-12 sm:flex-row sm:items-stretch sm:gap-16">
+        <div className="flex w-full shrink-0 flex-col justify-between items-center gap-4 sm:w-auto sm:items-start">
+          <div className="flex flex-col gap-4 items-center sm:items-start">
+            <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500"><LiveDot /> Reading</p>
+            <div className="relative h-[260px] w-[234px]">
+              {[0,1,2].map(i => <div key={i} style={{ zIndex: 3-i, left: `${i*15}%` }} className="absolute h-[260px] w-[180px] animate-pulse rounded-xl bg-zinc-800" />)}
+            </div>
+          </div>
+          <div className="flex w-[234px] items-center justify-between">
+            <MorphingArrowButton direction="left" onClick={handlePrev} />
+            <MorphingArrowButton direction="right" onClick={handleNext} />
           </div>
         </div>
-        <div className="flex flex-col gap-4 min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
-          <div className="flex flex-col gap-2">
-            {[0, 1].map((row) => (
-              <div key={row} className="flex gap-2">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-[120px] w-[78px] shrink-0 animate-pulse rounded-lg bg-zinc-800" />
-                ))}
-              </div>
-            ))}
+        <div className="flex min-w-0 flex-col justify-between gap-4">
+          <div className="flex flex-col gap-4">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
+            <div className="flex flex-col gap-2">
+              {[0,1].map(row => <div key={row} className="flex gap-1">{Array.from({length:8}).map((_,i) => <div key={i} className="h-[120px] w-[78px] shrink-0 animate-pulse rounded-lg bg-zinc-800" />)}</div>)}
+            </div>
+          </div>
+          <div className="flex items-center justify-between pt-2">
+            <MorphingArrowButton direction="left" onClick={() => scrollBoth("left")} />
+            <MorphingArrowButton direction="right" onClick={() => scrollBoth("right")} />
           </div>
         </div>
       </div>
@@ -356,20 +288,40 @@ export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50
   }
 
   return (
-    <div className="flex flex-col gap-12 sm:flex-row sm:items-start sm:gap-16">
-      <div className="flex w-full shrink-0 flex-col items-center gap-4 sm:w-auto sm:items-start">
-        <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
-          <LiveDot /> Reading
-        </p>
-        <BookStack books={currentBooks} />
+    <div className="flex flex-col gap-12 sm:flex-row sm:items-stretch sm:gap-16">
+
+      {/* ── Card stack column ── */}
+      <div className="flex w-full shrink-0 flex-col items-center justify-between gap-6 sm:w-auto sm:items-start">
+        <div className="flex flex-col items-center gap-4 sm:items-start">
+          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+            <LiveDot /> Reading
+          </p>
+          {order.length > 0 && (
+            <BookStack books={currentBooks} order={order} onNext={handleNext} />
+          )}
+        </div>
+        {currentBooks.length > 1 && (
+          <div className="flex w-[234px] items-center justify-between">
+            <MorphingArrowButton direction="left" onClick={handlePrev} />
+            <MorphingArrowButton direction="right" onClick={handleNext} />
+          </div>
+        )}
       </div>
 
+      {/* ── Shelf column ── */}
       {readBooks.length > 0 && (
-        <div className="flex min-w-0 flex-col gap-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
-          <ReadShelf books={readBooks} />
+        <div className="flex min-w-0 flex-col justify-between gap-6">
+          <div className="flex flex-col gap-4">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Read</p>
+            <ReadShelf books={readBooks} row1Ref={row1Ref} row2Ref={row2Ref} />
+          </div>
+          <div className="flex items-center justify-between">
+            <MorphingArrowButton direction="left" onClick={() => scrollBoth("left")} />
+            <MorphingArrowButton direction="right" onClick={() => scrollBoth("right")} />
+          </div>
         </div>
       )}
+
     </div>
   );
 }
