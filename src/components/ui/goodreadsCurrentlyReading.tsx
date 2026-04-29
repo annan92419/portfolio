@@ -86,8 +86,8 @@ export function CurrentlyReading({ goodreadsUserId, maxBooks = 2 }: Props) {
           <LiveDot />
           Currently Reading
         </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {[0, 1].map((i) => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2].map((i) => (
             <div key={i} className="flex animate-pulse gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
               <div className="h-36 w-24 shrink-0 rounded-xl bg-zinc-800" />
               <div className="flex-1 space-y-3 py-2">
@@ -109,7 +109,7 @@ export function CurrentlyReading({ goodreadsUserId, maxBooks = 2 }: Props) {
         Currently Reading
       </p>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {books.map((book, i) => (
           <SpotlightCard key={book.title} book={book} featured={i === 0} />
         ))}

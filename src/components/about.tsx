@@ -77,12 +77,12 @@ export function About() {
               <BookOpen size={20} className="text-green-400" />
               Reading
             </h3>
-            <CurrentlyReading goodreadsUserId="173107363" />
+            <CurrentlyReading goodreadsUserId="173107363" maxBooks={3} />
           </div>
         </BlurFade>
 
         <BlurFade delay={0.3}>
-          <AlreadyRead goodreadsUserId="173107363" />
+          <AlreadyRead goodreadsUserId="173107363" maxBooks={50} />
         </BlurFade>
       </div>
     </section>
