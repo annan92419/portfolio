@@ -59,8 +59,8 @@ async function fetchShelf(userId: string, shelf: string, max: number): Promise<B
 
 // ─── Draggable card stack ─────────────────────────────────────────────────────
 
-const ROTATIONS = ["-5deg", "0deg", "5deg", "8deg"];
-const X_OFFSETS = ["0%", "20%", "40%", "55%"];
+const ROTATIONS = ["-3deg", "-1deg", "1deg", "3deg"];
+const X_OFFSETS = ["0%", "5%", "10%", "14%"];
 
 function StackCard({
   book,
@@ -262,7 +262,7 @@ function ReadShelf({ books }: { books: BookData[] }) {
   ) => (
     <div
       ref={ref}
-      className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden justify-start"
     >
       {rowBooks.map((book, i) => (
         <SpineCover
