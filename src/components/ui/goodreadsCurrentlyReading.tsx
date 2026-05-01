@@ -59,8 +59,8 @@ async function fetchShelf(userId: string, shelf: string, max: number): Promise<B
 
 // ─── Draggable card (no arrows — arrows live at column level) ─────────────────
 
-const ROTATIONS = ["-5deg", "0deg", "4deg", "7deg", "9deg"];
-const X_OFFSETS = ["0%", "15%", "30%", "42%", "52%"];
+const ROTATIONS = ["-5deg", "0deg", "4deg"];
+const X_OFFSETS = ["0%", "15%", "30%"];
 
 function StackCard({
   book,
