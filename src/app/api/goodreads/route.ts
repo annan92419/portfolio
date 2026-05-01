@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const revalidate = 3600; // cache for 1 hour
+export const revalidate = 300;
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   try {
     const res = await fetch(rssUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; portfolio-bot/1.0)" },
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     });
 
     if (!res.ok) {
