@@ -95,7 +95,7 @@ export function About() {
               <BookOpen size={20} className="text-green-400" />
               Reading
             </h3>
-            <ReadingSection goodreadsUserId="173107363" maxCurrently={3} maxRead={200} />
+            <ReadingSection goodreadsUserId="173107363" maxCurrently={5} maxRead={200} />
           </div>
         </BlurFade>
       </div>

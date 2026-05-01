@@ -217,7 +217,7 @@ interface Props {
   maxRead?: number;
 }
 
-export function ReadingSection({ goodreadsUserId, maxCurrently = 3, maxRead = 50 }: Props) {
+export function ReadingSection({ goodreadsUserId, maxCurrently = 5, maxRead = 50 }: Props) {
   const [currentBooks, setCurrentBooks] = useState<BookData[]>(FALLBACK_BOOKS);
   const [readBooks, setReadBooks] = useState<BookData[]>([]);
   const [loading, setLoading] = useState(!!goodreadsUserId);
