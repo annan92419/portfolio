@@ -17,8 +17,7 @@ export function About() {
           <BlurFade delay={0.05}>
             <p>
               I&apos;m a Computer Science PhD student at Georgia State
-              University, where I also hold an MS in Mathematics &amp; Computer
-              Science. My current
+              University, where I also hold an MS in Mathematics. My current
               research focuses on two problems: synthesizing healthy brain
               tissue from tumor-affected MRI scans, and predicting plausible
               future trajectories for agents in crowded scenes. Both sit at the
