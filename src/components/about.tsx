@@ -61,7 +61,7 @@ export function About() {
               { label: "Program", value: "PhD · Computer Science" },
               { label: "School", value: "Georgia State" },
               { label: "Expected", value: "May 2030" },
-              { label: "GPA", value: "3.81" },
+              { label: "GPA", value: "3.78" },
             ].map(({ label, value }) => (
               <div key={label}>
                 <p className="text-xs uppercase tracking-widest text-zinc-600">
