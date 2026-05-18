@@ -45,6 +45,7 @@ const skills = {
   ],
   "Data & Visualization": [
     "Scikit-Learn",
+    "Power BI",
     "Matplotlib",
     "Seaborn",
     "Statistical Modeling",
