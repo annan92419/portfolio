@@ -5,6 +5,11 @@ import { Trophy } from "lucide-react";
 
 const awards = [
   {
+    title: "Brains & Behavior Fellow",
+    description:
+      "Selected as a B&B Fellow by the GSU Neuroscience Institute — a competitive fellowship for graduate students whose research contributes to neuroscience across disciplines.",
+  },
+  {
     title: "2nd Place — CS Demo Competition",
     description:
       "Led a 5-person team to build LingoScape, a multi-modal language translation app, placing 2nd among 28 teams.",
