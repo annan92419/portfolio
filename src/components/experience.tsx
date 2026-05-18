@@ -16,20 +16,39 @@ const roles = [
   },
   {
     title: "Graduate Teaching Assistant",
+    course: "Foundations of Data Science",
+    org: "Georgia State University",
+    period: "Aug 2024 – Dec 2024",
+    bullets: [
+      "Evaluated data science assignments for over 55 students with detailed, individualized feedback.",
+      "Led weekly office hours mentoring students in Python and data visualization — average homework scores rose from 88.9% to 96.7%.",
+    ],
+  },
+  {
+    title: "Graduate Teaching Assistant",
     course: "Theory Foundations of Computer Science",
     org: "Georgia State University",
     period: "Jan 2025 – May 2025",
     bullets: [
       "Evaluated assignments for over 70 students, providing personalized feedback and guidance.",
       "Led weekly lab sessions to reinforce core concepts in computability, complexity, and formal languages.",
-      "Led weekly office hours mentoring students in Python and data visualization — average homework scores rose from 88.9% to 96.7%.",
     ],
   },
   {
     title: "Graduate Teaching Assistant",
-    course: "Foundations of Data Science",
+    course: "System Level Programming",
     org: "Georgia State University",
-    period: "Aug 2024 – Dec 2024",
+    period: "Aug 2025 – Dec 2025",
+    bullets: [
+      "Led 4 weekly lab sessions reinforcing low-level programming concepts for approximately 100 students.",
+      "Graded assignments and provided individualized feedback across the full student cohort.",
+    ],
+  },
+  {
+    title: "Graduate Teaching Assistant",
+    course: "Fundamentals of Data Science",
+    org: "Georgia State University",
+    period: "Jan 2026 – May 2026",
     bullets: [
       "Graded assignments for 55 students and provided detailed, individualized feedback.",
     ],
