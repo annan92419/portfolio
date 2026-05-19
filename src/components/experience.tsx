@@ -5,33 +5,12 @@ import { motion } from "framer-motion";
 
 const roles = [
   {
-    title: "Graduate Lab Assistant",
-    course: "Elementary Statistics",
-    org: "Georgia State University",
-    period: "Aug 2022 – Jul 2024",
-    bullets: [
-      "Visualized statistical concepts to help over 200 students build intuition for key ideas.",
-      "Documented common challenges and effective teaching strategies, contributing to an 8% improvement in student performance.",
-    ],
-  },
-  {
     title: "Graduate Teaching Assistant",
-    course: "Foundations of Data Science",
+    course: "Fundamentals of Data Science",
     org: "Georgia State University",
-    period: "Aug 2024 – Dec 2024",
+    period: "Jan 2026 – May 2026",
     bullets: [
-      "Evaluated data science assignments for over 55 students with detailed, individualized feedback.",
-      "Led weekly office hours mentoring students in Python and data visualization — average homework scores rose from 88.9% to 96.7%.",
-    ],
-  },
-  {
-    title: "Graduate Teaching Assistant",
-    course: "Theory Foundations of Computer Science",
-    org: "Georgia State University",
-    period: "Jan 2025 – May 2025",
-    bullets: [
-      "Evaluated assignments for over 70 students, providing personalized feedback and guidance.",
-      "Led weekly lab sessions to reinforce core concepts in computability, complexity, and formal languages.",
+      "Graded assignments for 55 students and provided detailed, individualized feedback.",
     ],
   },
   {
@@ -46,11 +25,32 @@ const roles = [
   },
   {
     title: "Graduate Teaching Assistant",
-    course: "Fundamentals of Data Science",
+    course: "Theory Foundations of Computer Science",
     org: "Georgia State University",
-    period: "Jan 2026 – May 2026",
+    period: "Jan 2025 – May 2025",
     bullets: [
-      "Graded assignments for 55 students and provided detailed, individualized feedback.",
+      "Evaluated assignments for over 70 students, providing personalized feedback and guidance.",
+      "Led weekly lab sessions to reinforce core concepts in computability, complexity, and formal languages.",
+    ],
+  },
+  {
+    title: "Graduate Teaching Assistant",
+    course: "Foundations of Data Science",
+    org: "Georgia State University",
+    period: "Aug 2024 – Dec 2024",
+    bullets: [
+      "Evaluated data science assignments for over 55 students with detailed, individualized feedback.",
+      "Led weekly office hours mentoring students in Python and data visualization — average homework scores rose from 88.9% to 96.7%.",
+    ],
+  },
+  {
+    title: "Graduate Lab Assistant",
+    course: "Elementary Statistics",
+    org: "Georgia State University",
+    period: "Aug 2022 – Jul 2024",
+    bullets: [
+      "Visualized statistical concepts to help over 200 students build intuition for key ideas.",
+      "Documented common challenges and effective teaching strategies, contributing to an 8% improvement in student performance.",
     ],
   },
 ];

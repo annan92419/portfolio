@@ -132,27 +132,6 @@ const papers: Array<{
   repoNote: string;
 }> = [
   {
-    title: "Brain Tumor Inpainting",
-    area: "Medical Imaging",
-    status: { type: "in_progress" },
-    description:
-      "Deep learning system for synthesizing healthy brain tissue from tumor-affected MRI scans. Given only a corrupted scan, the model infers what the underlying anatomy should look like — supporting non-invasive assessment and surgical planning without requiring paired healthy images.",
-    details: [
-      "Multi-modal MRI input (T1, T1ce, T2, FLAIR modalities)",
-      "Trained and evaluated on BraTS 2023 Adult Glioma dataset",
-      "Evaluated using masked PSNR — the BraTS 2023 winner protocol",
-    ],
-    metrics: [
-      { label: "Masked PSNR", value: "23.41 dB" },
-      { label: "SSIM", value: "0.93" },
-      { label: "LPIPS", value: "0.08" },
-      { label: "Dataset", value: "BraTS 2023" },
-    ],
-    stack: ["PyTorch", "Medical Imaging", "Deep Learning", "Python"],
-    github: "https://github.com/annan92419/brain-tumor-inpainting",
-    repoNote: "Private Research Repository",
-  },
-  {
     title: "Multi-Agent Trajectory Prediction",
     area: "Human Motion",
     status: { type: "in_progress" },
@@ -171,6 +150,27 @@ const papers: Array<{
     ],
     stack: ["PyTorch", "Trajectory Prediction", "Deep Learning", "Python"],
     github: "https://github.com/annan92419/dual-stream-traj",
+    repoNote: "Private Research Repository",
+  },
+  {
+    title: "Brain Tumor Inpainting",
+    area: "Medical Imaging",
+    status: { type: "in_progress" },
+    description:
+      "Deep learning system for synthesizing healthy brain tissue from tumor-affected MRI scans. Given only a corrupted scan, the model infers what the underlying anatomy should look like — supporting non-invasive assessment and surgical planning without requiring paired healthy images.",
+    details: [
+      "Multi-modal MRI input (T1, T1ce, T2, FLAIR modalities)",
+      "Trained and evaluated on BraTS 2023 Adult Glioma dataset",
+      "Evaluated using masked PSNR — the BraTS 2023 winner protocol",
+    ],
+    metrics: [
+      { label: "Masked PSNR", value: "23.41 dB" },
+      { label: "SSIM", value: "0.93" },
+      { label: "LPIPS", value: "0.08" },
+      { label: "Dataset", value: "BraTS 2023" },
+    ],
+    stack: ["PyTorch", "Medical Imaging", "Deep Learning", "Python"],
+    github: "https://github.com/annan92419/brain-tumor-inpainting",
     repoNote: "Private Research Repository",
   },
 ];
